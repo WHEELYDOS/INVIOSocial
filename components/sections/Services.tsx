@@ -76,41 +76,27 @@ function ServiceCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       viewport={{ once: true }}
-      className="group relative overflow-hidden p-6 sm:p-8 rounded-2xl glass cursor-interactive card-glow transition-all duration-400"
-      whileHover={{ y: -8, scale: 1.02 }}
-      style={{ transition: "all 0.4s ease" }}
+      className="service-card cursor-interactive"
     >
       {/* Icon */}
-      <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 dark:bg-accent/15 group-hover:bg-accent/20 transition-all duration-300">
-        <Icon className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[5deg]" />
+      <div className="icon mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10">
+        <Icon className="w-6 h-6 text-accent" />
       </div>
 
       {/* Title */}
-      <h3 className="text-lg sm:text-xl font-bold text-primary dark:text-background mb-2 leading-snug">
+      <h3 className="text-lg sm:text-xl font-bold leading-snug">
         {service.name}
       </h3>
 
-      {/* Hook — visible by default (short description) */}
-      <p className="text-sm sm:text-base font-semibold text-accent mb-3 leading-snug">
+      {/* Hook — always visible */}
+      <p className="short text-sm sm:text-base text-accent">
         {service.hook}
       </p>
 
-      {/* Full description — fades in on hover */}
-      <p className="text-sm text-primary/65 dark:text-background/60 leading-relaxed opacity-0 translate-y-[10px] group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
+      {/* Full description — revealed on hover */}
+      <p className="full text-sm leading-relaxed opacity-70">
         {service.description}
       </p>
-
-      {/* Glow border on hover */}
-      <div
-        className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-        style={{
-          border: "1px solid rgba(86, 163, 243, 0.5)",
-          boxShadow: "0 0 30px rgba(86, 163, 243, 0.2)",
-        }}
-      />
-
-      {/* Subtle bottom accent line on hover */}
-      <div className="absolute bottom-0 left-6 right-6 h-[2px] bg-accent/0 group-hover:bg-accent/40 transition-all duration-300 rounded-full" />
     </motion.div>
   );
 }

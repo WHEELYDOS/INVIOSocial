@@ -52,10 +52,10 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center cursor-interactive hover:opacity-90 transition-opacity py-2 px-3 rounded-lg hover:bg-primary/10 dark:hover:bg-black/10">
           {mounted && (
-            <Image 
-              src={theme === "dark" ? "/images/comp10.png" : "/images/logo0.png"} 
-              alt="Invio Social" 
-              width={550} 
+            <Image
+              src={theme === "dark" ? "/images/comp10.png" : "/images/logo0.png"}
+              alt="Invio Social"
+              width={550}
               height={450}
               className="h-8 w-auto drop-shadow-lg hover:drop-shadow-2xl transition-all duration-300 hover:scale-105"
               priority
@@ -95,7 +95,7 @@ export default function Navbar() {
             </motion.button>
           )}
 
-          <motion.button 
+          <motion.button
             onClick={() => window.location.href = "#contact"}
             className="hidden sm:inline-block btn-primary text-sm cursor-interactive"
             whileHover={{ scale: 1.05 }}
@@ -144,7 +144,7 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <motion.button 
+          <motion.button
             onClick={() => {
               setIsOpen(false);
               window.location.href = "#contact";

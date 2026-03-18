@@ -45,10 +45,10 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-2 mb-4 cursor-interactive hover:opacity-80 transition-opacity">
-              <Image 
-                src="/images/logo0.png" 
-                alt="Invio Social" 
-                width={80} 
+              <Image
+                src="/images/logo0.png"
+                alt="Invio Social"
+                width={80}
                 height={30}
                 className="h-5 w-auto drop-shadow-lg"
               />
@@ -57,7 +57,7 @@ export default function Footer() {
             <p className="text-sm text-background/70 leading-relaxed mb-6">
               A digital growth agency helping local businesses improve discoverability, SEO, and reputation.
             </p>
-            
+
             {/* Contact Info */}
             <div className="space-y-3 text-sm">
               <a href="mailto:inviosocial@gmail.com" className="flex items-center gap-2 text-background/70 hover:text-accent transition-colors cursor-interactive">
@@ -100,8 +100,8 @@ export default function Footer() {
             <h4 className="font-semibold text-background mb-4">Services</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -109,8 +109,8 @@ export default function Footer() {
                 </motion.a>
               </li>
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -118,8 +118,8 @@ export default function Footer() {
                 </motion.a>
               </li>
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -127,8 +127,8 @@ export default function Footer() {
                 </motion.a>
               </li>
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -136,8 +136,8 @@ export default function Footer() {
                 </motion.a>
               </li>
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -145,8 +145,8 @@ export default function Footer() {
                 </motion.a>
               </li>
               <li>
-                <motion.a 
-                  href="#" 
+                <motion.a
+                  href="#"
                   className="text-background/70 hover:text-accent transition-colors cursor-interactive"
                   whileHover={{ x: 4 }}
                 >
@@ -187,7 +187,7 @@ export default function Footer() {
                 </motion.button>
               </div>
               {subscribed && (
-                <motion.p 
+                <motion.p
                   className="text-accent text-xs"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
