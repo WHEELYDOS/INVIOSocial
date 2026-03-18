@@ -117,11 +117,12 @@ export default function Hero() {
               variants={itemVariants}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold leading-[1.1] text-background tracking-tight"
             >
-              Get More Customers
+              Hard to
               <br />
-              From{" "}
+              Find Online?
+              <br />
               <span className="text-accent relative">
-                Google
+                Let Us Help You
                 <svg
                   className="absolute -bottom-1 left-0 w-full"
                   viewBox="0 0 200 8"
@@ -136,10 +137,9 @@ export default function Hero() {
                     opacity="0.6"
                   />
                 </svg>
-              </span>{" "}
-              — Without
+              </span>
               <br />
-              Running Ads.
+              Get Discovered.
             </motion.h1>
 
             {/* Subtitle */}
@@ -147,8 +147,9 @@ export default function Hero() {
               variants={itemVariants}
               className="text-base sm:text-lg text-background/60 leading-relaxed max-w-md"
             >
-              We help local businesses dominate search results, build trust, and
-              convert online visibility into real revenue.
+              Great businesses go unnoticed because customers can&apos;t find them.
+              We fix that — improving your online presence so the right customers
+              find you at the right time.
             </motion.p>
 
             {/* CTAs */}
@@ -162,17 +163,17 @@ export default function Hero() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
-                Get Free Audit
+                Get Your Free Audit
                 <ArrowRight className="w-4 h-4" />
               </motion.button>
 
               <motion.button
-                onClick={() => (window.location.href = "#contact")}
+                onClick={() => (window.location.href = "#services")}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-background/80 border border-background/20 rounded-xl hover:bg-background/5 hover:border-background/30 transition-all duration-200 cursor-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
-                Book a Call
+                Explore Services
               </motion.button>
             </motion.div>
 

@@ -39,12 +39,12 @@ function usePrefersReducedMotion() {
 }
 
 // ---------------------------------------------------------------------------
-// CustomCursor — dot + ring, direct DOM manipulation, no React re-renders
+// CustomCursor — dot + ring that changes color based on section background
 // ---------------------------------------------------------------------------
 export function CustomCursor() {
   const hasPointer = useHasPointer();
   const reducedMotion = usePrefersReducedMotion();
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -53,6 +53,7 @@ export function CustomCursor() {
   const mouse = useRef({ x: 0, y: 0 });
   const ringPos = useRef({ x: 0, y: 0 });
   const isHovering = useRef(false);
+  const isOverDark = useRef(false);
   const rafId = useRef<number>(0);
 
   useEffect(() => {
@@ -62,13 +63,50 @@ export function CustomCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
+    // Determine if cursor is over a dark-background section
+    const checkDarkSection = (_x: number, y: number) => {
+      // Check Hero section
+      const hero = document.getElementById("home");
+      if (hero) {
+        const rect = hero.getBoundingClientRect();
+        if (y >= rect.top && y <= rect.bottom) return true;
+      }
+      // Check Footer
+      const footer = document.querySelector("footer");
+      if (footer) {
+        const rect = footer.getBoundingClientRect();
+        if (y >= rect.top && y <= rect.bottom) return true;
+      }
+      return false;
+    };
+
+    // Update cursor colors
+    const updateCursorColor = (overDark: boolean) => {
+      const isDarkTheme = document.documentElement.classList.contains("dark");
+      let dotColor: string;
+      let ringColor: string;
+
+      if (isDarkTheme || overDark) {
+        // Over dark background → white cursor
+        dotColor = "#ffffff";
+        ringColor = "rgba(255, 255, 255, 0.8)";
+      } else {
+        // Over light background → dark cursor
+        dotColor = "#191923";
+        ringColor = "rgba(25, 25, 35, 0.6)";
+      }
+
+      dot.style.backgroundColor = dotColor;
+      ring.style.borderColor = ringColor;
+    };
+
     // --- Mouse move handler (passive, no state) ---
     const onMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
 
       // Move the dot instantly (no lag)
-      dot.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0) scale(${isHovering.current ? 1.5 : 1})`;
+      dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0) scale(${isHovering.current ? 1.4 : 1})`;
 
       // Check interactive target
       const target = e.target as HTMLElement;
@@ -83,14 +121,16 @@ export function CustomCursor() {
 
       if (interactive !== isHovering.current) {
         isHovering.current = interactive;
-        // Update dot scale
-        dot.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0) scale(${interactive ? 1.5 : 1})`;
-        // Update ring visual
-        ring.style.opacity = interactive ? "1" : "0.5";
-        ring.style.borderWidth = interactive ? "3px" : "2px";
-        // Toggle mix-blend-mode for hover
-        dot.style.mixBlendMode = interactive ? "difference" : "normal";
-        ring.style.mixBlendMode = interactive ? "difference" : "normal";
+        dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0) scale(${interactive ? 1.4 : 1})`;
+        ring.style.opacity = interactive ? "1" : "0.6";
+        ring.style.borderWidth = interactive ? "2.5px" : "2px";
+      }
+
+      // Detect dark section (throttled — check every move for responsiveness)
+      const overDark = checkDarkSection(e.clientX, e.clientY);
+      if (overDark !== isOverDark.current) {
+        isOverDark.current = overDark;
+        updateCursorColor(overDark);
       }
     };
 
@@ -101,7 +141,7 @@ export function CustomCursor() {
       ringPos.current.x += (mouse.current.x - ringPos.current.x) * lerpSpeed;
       ringPos.current.y += (mouse.current.y - ringPos.current.y) * lerpSpeed;
 
-      ring.style.transform = `translate3d(${ringPos.current.x - 20}px, ${ringPos.current.y - 20}px, 0) scale(${isHovering.current ? 1.4 : 1})`;
+      ring.style.transform = `translate3d(${ringPos.current.x - 18}px, ${ringPos.current.y - 18}px, 0) scale(${isHovering.current ? 1.3 : 1})`;
 
       rafId.current = requestAnimationFrame(animate);
     };
@@ -109,17 +149,36 @@ export function CustomCursor() {
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     rafId.current = requestAnimationFrame(animate);
 
+    // Initial color — force update immediately and after a short delay for hydration
+    const isDarkNow = document.documentElement.classList.contains("dark");
+    updateCursorColor(isDarkNow);
+    const timer = setTimeout(() => {
+      const isDarkDelayed = document.documentElement.classList.contains("dark");
+      updateCursorColor(isDarkDelayed);
+    }, 150);
+
+    // Watch for dark class changes on <html> (theme toggle)
+    const observer = new MutationObserver(() => {
+      const isDarkMutated = document.documentElement.classList.contains("dark");
+      updateCursorColor(isDarkMutated || isOverDark.current);
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(rafId.current);
+      clearTimeout(timer);
+      observer.disconnect();
     };
-  }, [hasPointer, reducedMotion]);
+  }, [hasPointer, reducedMotion, resolvedTheme]);
 
   // Don't render anything on touch devices
   if (!hasPointer) return null;
 
-  // Colors based on theme
-  const cursorColor = theme === "light" ? "#000000" : "#0E79B2";
+  // Initial color (will be updated dynamically via DOM)
+  const isDarkInit = resolvedTheme === "dark";
+  const initialColor = isDarkInit ? "#ffffff" : "#191923";
+  const initialRingColor = isDarkInit ? "rgba(255, 255, 255, 0.8)" : "rgba(25, 25, 35, 0.6)";
 
   return (
     <>
@@ -131,14 +190,14 @@ export function CustomCursor() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 12,
-          height: 12,
+          width: 10,
+          height: 10,
           borderRadius: "50%",
-          backgroundColor: cursorColor,
+          backgroundColor: initialColor,
           pointerEvents: "none",
           zIndex: 9999,
           willChange: "transform",
-          transition: "background-color 0.3s, scale 0.15s ease-out",
+          transition: "background-color 0.3s ease, scale 0.15s ease-out",
         }}
       />
 
@@ -150,15 +209,15 @@ export function CustomCursor() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: 40,
-          height: 40,
+          width: 36,
+          height: 36,
           borderRadius: "50%",
-          border: `2px solid ${cursorColor}`,
+          border: `2px solid ${initialRingColor}`,
           pointerEvents: "none",
           zIndex: 9999,
-          opacity: 0.5,
+          opacity: 0.6,
           willChange: "transform",
-          transition: "opacity 0.2s, border-width 0.2s, border-color 0.3s",
+          transition: "opacity 0.2s, border-width 0.2s, border-color 0.3s ease",
         }}
       />
     </>
