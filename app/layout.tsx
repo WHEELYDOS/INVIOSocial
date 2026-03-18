@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CustomCursor, MouseSpotlight } from "@/components/MouseTracker";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <CustomCursor />
           <MouseSpotlight />
           {children}
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
