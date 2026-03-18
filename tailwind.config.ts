@@ -32,6 +32,9 @@ const config: Config = {
       animation: {
         "marquee": "marquee 30s linear infinite",
         "fade-in": "fade-in 0.8s ease-in-out",
+        "float": "float 6s ease-in-out infinite",
+        "float-slow": "float 8s ease-in-out infinite",
+        "float-delayed": "float 6s ease-in-out 2s infinite",
       },
       keyframes: {
         "marquee": {

@@ -55,7 +55,7 @@ function DifferentiatorCard({
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -5 }}
-      className="p-4 sm:p-6 lg:p-8 rounded-2xl bg-white/70 dark:from-primary/20 dark:to-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 shadow-md dark:shadow-lg dark:shadow-accent/10 hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-accent/20 transition-all duration-300 cursor-interactive backdrop-blur-sm card-glow"
+      className="group p-4 sm:p-6 lg:p-8 rounded-2xl glass bg-white/70 dark:from-primary/20 dark:to-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 shadow-md dark:shadow-lg dark:shadow-accent/10 hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-accent/20 transition-all duration-300 cursor-interactive backdrop-blur-sm card-glow"
     >
       <motion.div
         className="flex items-start gap-3 sm:gap-4"

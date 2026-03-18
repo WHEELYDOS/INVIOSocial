@@ -76,12 +76,13 @@ function ServiceCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       viewport={{ once: true }}
-      whileHover={{ y: -8 }}
-      className="group relative p-6 sm:p-8 rounded-2xl bg-white/70 dark:bg-white/[0.04] border border-primary/[0.08] dark:border-white/[0.08] backdrop-blur-sm transition-all duration-300 cursor-interactive card-glow hover:shadow-xl hover:shadow-accent/10 dark:hover:shadow-accent/20 hover:border-accent/20 dark:hover:border-accent/30"
+      className="group relative overflow-hidden p-6 sm:p-8 rounded-2xl glass cursor-interactive card-glow transition-all duration-400"
+      whileHover={{ y: -8, scale: 1.02 }}
+      style={{ transition: "all 0.4s ease" }}
     >
       {/* Icon */}
-      <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 dark:bg-accent/15 group-hover:bg-accent/20 transition-colors duration-300">
-        <Icon className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110" />
+      <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 dark:bg-accent/15 group-hover:bg-accent/20 transition-all duration-300">
+        <Icon className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[5deg]" />
       </div>
 
       {/* Title */}
@@ -89,15 +90,24 @@ function ServiceCard({
         {service.name}
       </h3>
 
-      {/* Hook — the bold value line */}
+      {/* Hook — visible by default (short description) */}
       <p className="text-sm sm:text-base font-semibold text-accent mb-3 leading-snug">
         {service.hook}
       </p>
 
-      {/* Description */}
-      <p className="text-sm text-primary/65 dark:text-background/60 leading-relaxed">
+      {/* Full description — fades in on hover */}
+      <p className="text-sm text-primary/65 dark:text-background/60 leading-relaxed opacity-0 translate-y-[10px] group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
         {service.description}
       </p>
+
+      {/* Glow border on hover */}
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+        style={{
+          border: "1px solid rgba(86, 163, 243, 0.5)",
+          boxShadow: "0 0 30px rgba(86, 163, 243, 0.2)",
+        }}
+      />
 
       {/* Subtle bottom accent line on hover */}
       <div className="absolute bottom-0 left-6 right-6 h-[2px] bg-accent/0 group-hover:bg-accent/40 transition-all duration-300 rounded-full" />
@@ -129,10 +139,12 @@ export default function Services() {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <h2 className="heading-lg mb-4">How We Help You Grow</h2>
+          <h2 className="heading-lg mb-4">
+            Turn Your Online Presence Into a Customer-Generating Machine
+          </h2>
           <p className="text-subtitle max-w-2xl mx-auto">
-            Six integrated services designed to make your business discoverable,
-            credible, and conversion-ready
+            Everything you need to get discovered, build trust, and convert
+            visitors into paying customers.
           </p>
         </motion.div>
 

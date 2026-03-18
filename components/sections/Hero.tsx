@@ -18,7 +18,7 @@ function GlassCard({
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.8, delay, ease: "easeOut" }}
-      className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl shadow-accent/5 ${className}`}
+      className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl shadow-accent/5 floating-card ${className}`}
     >
       {children}
     </motion.div>
@@ -329,7 +329,7 @@ export default function Hero() {
 
             {/* Floating abstract shape */}
             <motion.div
-              className="absolute -top-8 right-[180px] w-20 h-20 rounded-2xl bg-accent/10 border border-accent/20 backdrop-blur-sm"
+              className="absolute -top-8 right-[180px] w-20 h-20 rounded-2xl bg-accent/10 border border-accent/20 backdrop-blur-sm floating-card"
               animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
               transition={{
                 duration: 6,
@@ -338,7 +338,7 @@ export default function Hero() {
               }}
             />
             <motion.div
-              className="absolute bottom-[100px] right-[380px] w-12 h-12 rounded-full bg-accent/8 border border-accent/15 backdrop-blur-sm"
+              className="absolute bottom-[100px] right-[380px] w-12 h-12 rounded-full bg-accent/8 border border-accent/15 backdrop-blur-sm floating-card"
               animate={{ y: [0, 8, 0], rotate: [0, -5, 0] }}
               transition={{
                 duration: 5,
