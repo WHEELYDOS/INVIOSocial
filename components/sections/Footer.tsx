@@ -2,22 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Mail, Linkedin, Twitter, Instagram } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
+import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // TODO: Integrate with Resend.com for email subscription
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 3000);
-    }
-  };
 
   const footerLinks = [
     { label: "Home", href: "#home" },
@@ -167,35 +155,7 @@ export default function Footer() {
             <p className="text-background/70 text-sm mb-4">
               Stay updated with latest insights and strategies
             </p>
-            <form onSubmit={handleSubscribe} className="space-y-2">
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-4 py-2 bg-primary/50 text-background placeholder-background/50 text-sm rounded-l-lg focus:outline-none focus:ring-2 focus:ring-accent cursor-text"
-                  required
-                />
-                <motion.button
-                  type="submit"
-                  className="px-4 py-2 bg-accent hover:bg-accent/90 text-background font-medium rounded-r-lg transition-colors text-sm cursor-interactive shadow-md hover:shadow-lg hover:shadow-accent/40"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mail className="w-4 h-4" />
-                </motion.button>
-              </div>
-              {subscribed && (
-                <motion.p
-                  className="text-accent text-xs"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  ✓ Thank you for subscribing!
-                </motion.p>
-              )}
-            </form>
+            <NewsletterSignup />
           </motion.div>
         </div>
 

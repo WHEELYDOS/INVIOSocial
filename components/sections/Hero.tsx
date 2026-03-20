@@ -50,7 +50,11 @@ function StatCard({
   );
 }
 
-export default function Hero() {
+interface HeroProps {
+  onGetAudit?: () => void;
+}
+
+export default function Hero({ onGetAudit }: HeroProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -158,7 +162,7 @@ export default function Hero() {
               className="flex flex-col sm:flex-row gap-3 pt-2"
             >
               <motion.button
-                onClick={() => (window.location.href = "#contact")}
+                onClick={() => onGetAudit?.()}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold bg-accent text-background rounded-xl hover:bg-accent/90 transition-all duration-200 cursor-interactive shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}

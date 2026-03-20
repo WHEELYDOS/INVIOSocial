@@ -7,7 +7,11 @@ import Image from "next/image";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function Navbar() {
+interface NavbarProps {
+  onBookConsultation?: () => void;
+}
+
+export default function Navbar({ onBookConsultation }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverDark, setIsOverDark] = useState(true); // Hero is first section = dark
@@ -131,7 +135,7 @@ export default function Navbar() {
           )}
 
           <motion.button
-            onClick={() => window.location.href = "#contact"}
+            onClick={() => onBookConsultation?.()}
             className="hidden sm:inline-block btn-primary text-sm cursor-interactive"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -182,7 +186,7 @@ export default function Navbar() {
           <motion.button
             onClick={() => {
               setIsOpen(false);
-              window.location.href = "#contact";
+              onBookConsultation?.();
             }}
             className="w-full btn-primary text-sm cursor-interactive"
             whileHover={{ scale: 1.02 }}
