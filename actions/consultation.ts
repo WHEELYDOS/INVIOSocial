@@ -104,7 +104,7 @@ export async function bookConsultation(
 
     return {
       success: true,
-      message: "We'll be in touch within 24 hours! 🎉",
+      message: "We'll be in touch within 24 hours!",
     };
   } catch {
     console.error("[consultation] Unexpected error");

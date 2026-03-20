@@ -79,7 +79,7 @@ export async function submitContact(
 
     return {
       success: true,
-      message: "Thanks for reaching out! We'll respond within 24 hours. 🚀",
+      message: "Thanks for reaching out! We'll respond within 24 hours.",
     };
   } catch {
     console.error("[contact] Unexpected error");

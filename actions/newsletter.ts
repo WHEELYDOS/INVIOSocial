@@ -51,7 +51,7 @@ export async function subscribeNewsletter(
 
     if (existing) {
       if (existing.is_active) {
-        return { success: true, message: "You're already subscribed! 🎉" };
+        return { success: true, message: "You're already subscribed!" };
       }
 
       // Reactivate previously unsubscribed email
@@ -65,7 +65,7 @@ export async function subscribeNewsletter(
         return { success: false, message: "Something went wrong. Please try again." };
       }
 
-      return { success: true, message: "Welcome back! You're re-subscribed. 🎉" };
+      return { success: true, message: "Welcome back! You're re-subscribed." };
     }
 
     // 3. Insert new subscriber
@@ -76,13 +76,13 @@ export async function subscribeNewsletter(
     if (insertError) {
       // Postgres unique constraint violation (duplicate race condition)
       if (insertError.code === "23505") {
-        return { success: true, message: "You're already subscribed! 🎉" };
+        return { success: true, message: "You're already subscribed!" };
       }
       console.error("[newsletter] Insert error:", insertError.code);
       return { success: false, message: "Something went wrong. Please try again." };
     }
 
-    return { success: true, message: "Welcome aboard! 🎉" };
+    return { success: true, message: "Welcome aboard!" };
   } catch {
     console.error("[newsletter] Unexpected error");
     return { success: false, message: "Something went wrong. Please try again." };

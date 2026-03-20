@@ -2,7 +2,12 @@
 
 import { motion } from "framer-motion";
 
-export default function OurBelief() {
+interface OurBeliefProps {
+  onGetAudit?: () => void;
+  onBookConsultation?: () => void;
+}
+
+export default function OurBelief({ onGetAudit, onBookConsultation }: OurBeliefProps) {
   const beliefs = [
     "Every good business deserves to be discovered by the customers who need it most.",
     "Many local businesses struggle not because they lack quality, but because they lack online visibility.",
@@ -74,6 +79,7 @@ export default function OurBelief() {
             viewport={{ once: true }}
           >
             <motion.button
+              onClick={() => onGetAudit?.()}
               className="btn-primary cursor-interactive"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -81,6 +87,7 @@ export default function OurBelief() {
               Start Growing Today
             </motion.button>
             <motion.button
+              onClick={() => onBookConsultation?.()}
               className="btn-secondary cursor-interactive"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

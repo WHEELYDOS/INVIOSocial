@@ -22,7 +22,10 @@ export default function Home() {
       <SocialProof />
       <Services />
       <WhyChooseUs />
-      <OurBelief />
+      <OurBelief 
+        onGetAudit={() => setShowContact(true)}
+        onBookConsultation={() => setShowConsultation(true)}
+      />
       <Footer />
 
       {/* Modals rendered at root level to avoid stacking context issues */}
