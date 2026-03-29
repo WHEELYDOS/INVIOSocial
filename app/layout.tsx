@@ -12,12 +12,12 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", weight: ["400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
-  title: "Invio Social - Digital Agency",
-  description: "Transform your digital presence with Invio Social's cutting-edge services",
-  keywords: "digital marketing, SEO, web development, social media, digital agency",
+  title: "Invio Social - Marketing Agency",
+  description: "Transform your business with Invio Social's cutting-edge marketing services",
+  keywords: "digital marketing, SEO, web development, social media, marketing agency",
   openGraph: {
-    title: "Invio Social - Digital Agency",
-    description: "Transform your digital presence",
+    title: "Invio Social - Marketing Agency",
+    description: "Transform your business presence",
     type: "website",
   },
   icons: {

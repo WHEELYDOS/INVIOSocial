@@ -52,7 +52,7 @@ export default function Footer() {
               <div>
                 <span className="font-bold text-xl tracking-tight mb-2 block">Invio Social</span>
                 <p className="text-white/50 text-sm max-w-xs font-medium leading-relaxed">
-                  A digital growth agency building unignorable visibility for local businesses.
+                  A marketing agency building unignorable visibility for local businesses.
                 </p>
               </div>
 

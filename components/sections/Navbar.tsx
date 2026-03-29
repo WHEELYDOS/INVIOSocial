@@ -66,29 +66,32 @@ export default function Navbar({ onBookConsultation }: NavbarProps) {
     <>
       <nav className="fixed top-6 left-0 right-0 z-50 px-6 md:px-12 flex justify-between items-center pointer-events-none">
         
-        {/* Left - Dynamic Logo */}
+        {/* Left - Dynamic Logo Container (Pill) */}
         <Link
           href="/"
-          className="pointer-events-auto flex items-center cursor-interactive hover:opacity-80 transition-opacity drop-shadow-sm"
+          className={`pointer-events-auto flex items-center justify-center h-[36px] px-4 sm:h-[50px] sm:px-6 rounded-full cursor-interactive transition-all duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] shadow-lg hover:scale-105 active:scale-95
+            ${activeTheme === 'dark'
+              ? 'bg-white border border-white/10 hover:bg-white/90'
+              : 'bg-black border border-black/10 hover:bg-black/90'}`}
         >
-          <div className="relative flex items-center justify-start w-[120px] h-[30px] sm:w-[140px] sm:h-[36px]">
-            {/* comp10.png -> Used on dark backgrounds, usually white-colored logo */}
-            <div className={`absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${activeTheme === 'dark' ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+          <div className="relative flex items-center justify-center w-[100px] h-[24px] sm:w-[150px] sm:h-[32px]">
+            {/* comp10.png (WHITE LOGO text) -> Shows when pill is black (activeTheme === 'light') */}
+            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${activeTheme === 'light' ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
               <Image
                 src="/images/comp10.png"
                 alt="Invio Social"
                 fill
-                className="object-contain object-left"
+                className="object-contain object-center"
                 priority
               />
             </div>
-            {/* logo0.png -> Used on light backgrounds, usually black-colored logo */}
-            <div className={`absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${activeTheme === 'light' ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+            {/* logo0.png (BLACK LOGO text) -> Shows when pill is white (activeTheme === 'dark') */}
+            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${activeTheme === 'dark' ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
               <Image
                 src="/images/logo0.png"
                 alt="Invio Social"
                 fill
-                className="object-contain object-left"
+                className="object-contain object-center"
                 priority
               />
             </div>
