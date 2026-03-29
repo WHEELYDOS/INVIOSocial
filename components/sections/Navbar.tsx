@@ -74,7 +74,7 @@ export default function Navbar({ onBookConsultation }: NavbarProps) {
               ? 'bg-white border border-white/10 hover:bg-white/90'
               : 'bg-black border border-black/10 hover:bg-black/90'}`}
         >
-          <div className="relative flex items-center justify-center w-[100px] h-[24px] sm:w-[150px] sm:h-[32px]">
+          <div className="relative flex items-center justify-center w-[85px] h-[24px] sm:w-[120px] sm:h-[32px]">
             {/* comp10.png (WHITE LOGO text) -> Shows when pill is black (activeTheme === 'light') */}
             <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${activeTheme === 'light' ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
               <Image

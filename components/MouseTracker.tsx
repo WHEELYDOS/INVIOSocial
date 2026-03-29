@@ -50,18 +50,10 @@ export function CustomCursor() {
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Fast spring for the inner dot
-  const dotSpringConfig = reducedMotion
-    ? { damping: 100, stiffness: 1000 }
-    : { damping: 25, stiffness: 400, mass: 0.2 };
-    
   // Slower, liquid spring for the outer ring/trailer
   const ringSpringConfig = reducedMotion
     ? { damping: 100, stiffness: 1000 }
     : { damping: 30, stiffness: 150, mass: 0.6 };
-
-  const dotX = useSpring(mouseX, dotSpringConfig);
-  const dotY = useSpring(mouseY, dotSpringConfig);
 
   const ringX = useSpring(mouseX, ringSpringConfig);
   const ringY = useSpring(mouseY, ringSpringConfig);
@@ -101,12 +93,12 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* INNER DOT (Fast) */}
+      {/* INNER DOT (Instant 1:1 Hardware Tracking - ZERO LAG) */}
       <motion.div
         aria-hidden="true"
         style={{
-          x: dotX,
-          y: dotY,
+          x: mouseX,
+          y: mouseY,
           translateX: "-50%",
           translateY: "-50%",
         }}
@@ -120,7 +112,7 @@ export function CustomCursor() {
         transition={{ type: "tween", ease: "backOut", duration: 0.2 }}
       />
 
-      {/* OUTER RING / HOVER STATE (Slow, Flowing) */}
+      {/* OUTER RING / HOVER STATE (Slow, Flowing Aura) */}
       <motion.div
         aria-hidden="true"
         style={{

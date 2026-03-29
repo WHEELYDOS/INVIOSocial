@@ -57,7 +57,6 @@
 
   /* Hide native cursor only on devices that have a fine pointer (mouse) */
   @media (pointer: fine) {
-
     *,
     *::before,
     *::after {
