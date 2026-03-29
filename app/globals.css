@@ -1,46 +1,54 @@
+@import 'lenis/dist/lenis.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   BASE LAYER — Premium foundational tokens
+   ============================================ */
 @layer base {
   html {
-    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Lenis smooth scroll overrides */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 
   body {
-    @apply text-primary dark:text-background transition-colors duration-300;
-    /* Premium ambient gradient background — "feel alive but invisible" */
-    background:
-      radial-gradient(ellipse 600px 600px at 15% 10%,
-        rgba(14, 121, 178, 0.07),
-        transparent 60%),
-      radial-gradient(ellipse 500px 500px at 85% 5%,
-        rgba(14, 121, 178, 0.05),
-        transparent 55%),
-      radial-gradient(ellipse 400px 400px at 50% 90%,
-        rgba(14, 121, 178, 0.04),
-        transparent 50%),
-      #FBFEF9;
+    @apply transition-colors duration-500;
+    background: transparent;
+    color: var(--morph-text, rgb(25, 25, 35));
+    line-height: 1.7;
+    letter-spacing: -0.01em;
   }
 
-  .dark body {
-    background:
-      radial-gradient(ellipse 600px 600px at 20% 15%,
-        rgba(14, 121, 178, 0.15),
-        transparent 60%),
-      radial-gradient(ellipse 500px 500px at 80% 5%,
-        rgba(14, 121, 178, 0.08),
-        transparent 55%),
-      #0a0a12;
+  :root {
+    --morph-bg: rgb(25, 25, 35);
+    --morph-text: rgb(251, 254, 249);
+    --morph-text-muted: rgba(251, 254, 249, 0.65);
+    --morph-surface: rgba(255, 255, 255, 0.05);
+    --morph-surface-border: rgba(255, 255, 255, 0.08);
+    --morph-nav-bg: rgba(25, 25, 35, 0.5);
+    --morph-nav-text: rgb(251, 254, 249);
+    --morph-accent-glow: 0.15;
+    --morph-is-dark: 1;
   }
 
   button {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-premium;
   }
 
   button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(86, 163, 243, 0.3);
   }
 
   button:active {
@@ -61,158 +69,268 @@
   [id] {
     scroll-margin-top: 5rem;
   }
+
+  /* Premium text rendering */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading tracking-tight;
+    text-rendering: optimizeLegibility;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  /* Premium Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111118;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555555;
+  }
+
+  /* Support for Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #333333 #111118;
+  }
 }
 
+/* ============================================
+   COMPONENT LAYER — Reusable styled primitives
+   ============================================ */
 @layer components {
 
-  /* CTA Button styles */
+  /* ---- CTA Button styles ---- */
   .btn-primary {
-    @apply px-6 py-3 bg-accent text-background rounded-lg font-semibold hover:bg-accent/90 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-black;
+    @apply px-6 py-3 bg-accent text-background rounded-xl font-semibold hover:bg-accent/90 active:scale-95 transition-all duration-300 ease-premium shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+    box-shadow: 0 4px 16px rgba(14, 121, 178, 0.25);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 8px 30px rgba(14, 121, 178, 0.35);
+    transform: translateY(-2px) scale(1.03);
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-transparent text-accent border border-accent rounded-lg font-semibold hover:bg-accent hover:text-background transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg hover:shadow-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:focus-visible:ring-offset-black;
+    @apply px-6 py-3 bg-transparent text-accent border border-accent/40 rounded-xl font-semibold hover:bg-accent hover:text-background transition-all duration-300 ease-premium active:scale-95;
+  }
+
+  .btn-secondary:hover {
+    box-shadow: 0 8px 30px rgba(14, 121, 178, 0.2);
+    transform: translateY(-2px) scale(1.03);
   }
 
   .btn-dark {
-    @apply px-6 py-3 bg-primary dark:bg-background text-background dark:text-primary rounded-lg font-semibold hover:opacity-90 transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+    @apply px-6 py-3 bg-primary text-background rounded-xl font-semibold hover:opacity-90 transition-all duration-300 ease-premium active:scale-95 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
   }
 
   .btn-disabled {
-    @apply px-6 py-3 bg-primary/20 dark:bg-background/20 text-primary/40 dark:text-background/40 rounded-lg font-semibold cursor-not-allowed shadow-none pointer-events-none;
+    @apply px-6 py-3 bg-primary/20 text-primary/40 rounded-xl font-semibold cursor-not-allowed shadow-none pointer-events-none;
   }
 
-  /* Utility classes */
+  /* ---- Layout utilities ---- */
   .section-padding {
-    @apply py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 lg:px-24;
+    @apply py-16 sm:py-20 md:py-28 px-4 sm:px-6 md:px-12 lg:px-24;
   }
 
   .container-max {
-    @apply w-full max-w-7xl mx-auto;
+    @apply w-full max-w-[1600px] mx-auto;
   }
 
+  /* ---- Typography system ---- */
   .heading-xl {
     @apply text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+    letter-spacing: -0.03em;
   }
 
   .heading-lg {
     @apply text-xl sm:text-3xl md:text-4xl font-bold;
+    letter-spacing: -0.035em;
   }
 
   .heading-md {
     @apply text-lg sm:text-2xl md:text-3xl font-semibold;
+    letter-spacing: -0.03em;
   }
 
   .text-subtitle {
-    @apply text-base sm:text-lg md:text-xl text-primary/70 dark:text-background/70;
+    @apply text-base sm:text-lg md:text-xl text-primary/60 leading-relaxed;
   }
 
-  /* Interactive elements */
+  /* ---- Interactive elements ---- */
   .cursor-interactive {
     @apply cursor-none;
   }
 
-  /* Card shadows */
+  /* ---- Card system ---- */
   .card-shadow {
-    @apply shadow-md dark:shadow-lg dark:shadow-accent/10 hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-accent/20 transition-all duration-300;
+    box-shadow:
+      0 1px 3px rgba(25, 25, 35, 0.04),
+      0 4px 16px rgba(25, 25, 35, 0.06),
+      0 12px 40px rgba(25, 25, 35, 0.04);
+    transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
-  /* Glass morphism effect */
-  .glass-effect {
-    @apply bg-background/50 dark:bg-black/50 backdrop-blur-md border border-background/20 dark:border-white/10;
+  .card-shadow:hover {
+    box-shadow:
+      0 2px 6px rgba(25, 25, 35, 0.06),
+      0 8px 24px rgba(25, 25, 35, 0.08),
+      0 20px 60px rgba(25, 25, 35, 0.06);
   }
 
-  /* Acrylic glass — reusable premium card/section surface */
+  /* ---- Glassmorphism v2 ---- */
   .glass {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: var(--morph-surface, rgba(255, 255, 255, 0.55));
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--morph-surface-border, rgba(255, 255, 255, 0.6));
+    border-radius: 20px;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(25, 25, 35, 0.6);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* Footer styles */
-  .footer-bg {
-    @apply bg-background dark:bg-white;
+  .glass-effect {
+    @apply bg-background/50 backdrop-blur-md;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .footer-text {
-    @apply text-primary dark:text-primary;
-  }
-
-  /* Smooth transitions */
+  /* ---- Smooth transitions ---- */
   .smooth-transition {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-all duration-400;
+    transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 }
 
-/* =========================================
-   SERVICE CARD — LIGHT-TO-DARK HOVER SYSTEM
-   ========================================= */
+/* ============================================
+   SECTION DIVIDER — Gradient blending between sections
+   ============================================ */
+.section-divider {
+  height: 120px;
+  position: relative;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-divider-dark-to-light {
+  background: linear-gradient(180deg,
+      #191923 0%,
+      #191923 10%,
+      #1a1a2a 25%,
+      #2a2a3f 40%,
+      #4a4a65 55%,
+      #8a8aa0 70%,
+      #c5c5d4 82%,
+      #e8e8ee 90%,
+      #F9F7F7 100%);
+}
+
+.section-divider-light-to-dark {
+  background: linear-gradient(180deg,
+      #F9F7F7 0%,
+      #e8e8ee 10%,
+      #c5c5d4 18%,
+      #8a8aa0 30%,
+      #4a4a65 45%,
+      #2a2a3f 60%,
+      #1a1a2a 75%,
+      #191923 90%,
+      #191923 100%);
+}
+
+.section-divider-light-to-soft {
+  background: linear-gradient(180deg,
+      #F9F7F7 0%,
+      #f0eff2 30%,
+      #e8e6ec 60%,
+      #F9F7F7 100%);
+}
+
+/* ============================================
+   SERVICE CARD — Premium light card system
+   ============================================ */
+.service-stack-card {
+  /* Dynamic viewport height stacking guarantees card titles remain visible even on tiny mobile screens */
+  top: calc(15vh + var(--stack-offset) * 8vh);
+}
+
+@media (min-width: 768px) {
+  .service-stack-card {
+    /* Fixed precise offsets for Desktop */
+    top: calc(140px + var(--stack-offset) * 85px);
+  }
+}
 
 .service-card {
   position: relative;
-  padding: 28px;
-  border-radius: 16px;
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  transition: all 0.4s ease;
+  padding: 32px;
+  border-radius: 20px;
+  background: var(--morph-surface, rgba(255, 255, 255, 0.7));
+  color: var(--morph-text, #191923);
+  border: 1px solid var(--morph-surface-border, rgba(25, 25, 35, 0.06));
+  transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
   overflow: hidden;
   cursor: pointer;
-}
-
-.dark .service-card {
-  background: rgba(255, 255, 255, 0.04);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 /* Short text — always visible */
 .service-card .short {
   font-weight: 600;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 /* Hidden detailed content */
 .service-card .full {
   opacity: 0;
   transform: translateY(10px);
-  margin-top: 12px;
-  transition: all 0.4s ease 0.1s;
+  margin-top: 14px;
+  transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s;
 }
 
-/* HOVER STATE — transforms to dark glass (light mode) */
+/* HOVER STATE — transforms to premium dark glass */
 .service-card:hover {
-  background: rgba(11, 15, 26, 0.85);
+  background: rgba(25, 25, 35, 0.9);
   color: #ffffff;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(86, 163, 243, 0.4);
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-}
-
-/* DARK MODE HOVER — flips to white/light glass */
-.dark .service-card:hover {
-  background: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.08);
-}
-
-.dark .service-card:hover .short {
-  color: #0E79B2;
-}
-
-.dark .service-card:hover .full {
-  color: #334155;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(14, 121, 178, 0.3);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 12px 40px rgba(25, 25, 35, 0.2),
+    0 0 0 1px rgba(14, 121, 178, 0.15);
 }
 
 /* Reveal hidden content on hover */
@@ -223,15 +341,11 @@
 
 /* Icon animation on hover */
 .service-card .icon {
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .service-card:hover .icon {
   transform: scale(1.15) rotate(5deg);
-  color: #56A3F3;
-}
-
-.dark .service-card:hover .icon {
   color: #0E79B2;
 }
 
@@ -240,14 +354,12 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 16px;
+  border-radius: 20px;
   opacity: 0;
-  transition: opacity 0.4s ease;
-  background: radial-gradient(
-    circle at top,
-    rgba(86, 163, 243, 0.25),
-    transparent 70%
-  );
+  transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  background: radial-gradient(circle at top,
+      rgba(14, 121, 178, 0.2),
+      transparent 70%);
   pointer-events: none;
 }
 
@@ -255,26 +367,12 @@
   opacity: 1;
 }
 
-.dark .service-card:hover::before {
-  background: radial-gradient(
-    circle at top,
-    rgba(14, 121, 178, 0.15),
-    transparent 70%
-  );
-}
-
 /* Mobile: always show full content (no hover) */
 @media (hover: none) {
   .service-card {
-    background: rgba(11, 15, 26, 0.9);
+    background: rgba(25, 25, 35, 0.92);
     color: white;
-    border: 1px solid rgba(86, 163, 243, 0.3);
-  }
-
-  .dark .service-card {
-    background: rgba(255, 255, 255, 0.9);
-    color: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(14, 121, 178, 0.2);
   }
 
   .service-card .full {
@@ -283,16 +381,14 @@
   }
 
   .service-card .icon {
-    color: #56A3F3;
+    color: #0E79B2;
   }
 }
 
-/* =========================================
+/* ============================================
    AMBIENT GRADIENT SYSTEM
-   "If user feels premium but can't tell why — perfect"
-   ========================================= */
+   ============================================ */
 
-/* Floating gradient blob animation */
 @keyframes floatGradient {
   0% {
     transform: translateY(0px) scale(1);
@@ -321,7 +417,6 @@
   }
 }
 
-/* Ambient gradient blob — position with absolute + top/left/right */
 .ambient-blob {
   position: absolute;
   border-radius: 9999px;
@@ -333,50 +428,34 @@
 .ambient-blob-lg {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(14, 121, 178, 0.08) 0%, transparent 70%);
   animation: floatGradient 14s ease-in-out infinite;
-}
-
-.dark .ambient-blob-lg {
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.20) 0%, transparent 70%);
 }
 
 .ambient-blob-md {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(14, 121, 178, 0.06) 0%, transparent 70%);
   animation: floatGradientAlt 12s ease-in-out infinite;
-}
-
-.dark .ambient-blob-md {
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.15) 0%, transparent 70%);
 }
 
 .ambient-blob-sm {
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(14, 121, 178, 0.05) 0%, transparent 70%);
   animation: floatGradient 10s ease-in-out infinite;
 }
 
-.dark .ambient-blob-sm {
-  background: radial-gradient(circle, rgba(14, 121, 178, 0.12) 0%, transparent 70%);
-}
-
-/* Section gradient overlay — apply to sections for subtle top gradient wash */
+/* Section gradient overlay */
 .section-gradient-top {
   background: linear-gradient(180deg,
-      rgba(14, 121, 178, 0.06) 0%,
+      rgba(14, 121, 178, 0.04) 0%,
       transparent 40%);
 }
 
-.dark .section-gradient-top {
-  background: linear-gradient(180deg,
-      rgba(14, 121, 178, 0.10) 0%,
-      transparent 40%);
-}
-
-/* Card glow border — premium inner glow on hover */
+/* ============================================
+   CARD GLOW BORDER — Premium inner glow on hover
+   ============================================ */
 .card-glow {
   position: relative;
 }
@@ -388,7 +467,7 @@
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(135deg,
-      rgba(14, 121, 178, 0.3),
+      rgba(14, 121, 178, 0.25),
       transparent 60%);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -396,7 +475,7 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
   pointer-events: none;
 }
 
@@ -404,13 +483,9 @@
   opacity: 1;
 }
 
-/* =========================================
-   END AMBIENT GRADIENT SYSTEM
-   ========================================= */
-
-/* =========================================
+/* ============================================
    FLOATING ANIMATION (Hero cards)
-   ========================================= */
+   ============================================ */
 @keyframes float {
 
   0%,
@@ -427,13 +502,14 @@
   animation: float 6s ease-in-out infinite;
 }
 
-/* =========================================
-   SCROLL-BASED REVEAL ANIMATIONS
-   ========================================= */
+/* ============================================
+   SCROLL-BASED REVEAL ANIMATIONS — IITP-inspired
+   ============================================ */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
-  transition: all 0.6s ease;
+  transition: opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .reveal.active {
@@ -442,27 +518,173 @@
 }
 
 .reveal-delay-1 {
-  transition-delay: 0.1s;
+  transition-delay: 0.08s;
 }
 
 .reveal-delay-2 {
-  transition-delay: 0.2s;
+  transition-delay: 0.16s;
 }
 
 .reveal-delay-3 {
-  transition-delay: 0.3s;
+  transition-delay: 0.24s;
 }
 
 .reveal-delay-4 {
-  transition-delay: 0.4s;
+  transition-delay: 0.32s;
 }
 
-/* Smooth scroll behavior */
-@supports (scroll-behavior: smooth) {
-  html {
-    scroll-behavior: smooth;
+.reveal-delay-5 {
+  transition-delay: 0.40s;
+}
+
+.reveal-delay-6 {
+  transition-delay: 0.48s;
+}
+
+/* Staggered children reveal (IITP-style) */
+.reveal-stagger>* {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal-stagger>*.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reveal from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Reveal from right */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale reveal */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============================================
+   CTA ALIVE — Soft glow pulse for hero CTA
+   ============================================ */
+@keyframes cta-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(14, 121, 178, 0.25), 0 0 0 0 rgba(14, 121, 178, 0);
+  }
+
+  50% {
+    box-shadow: 0 4px 20px rgba(14, 121, 178, 0.35), 0 0 20px 4px rgba(14, 121, 178, 0.1);
   }
 }
+
+.cta-alive {
+  animation: cta-glow 3s ease-in-out infinite;
+}
+
+.cta-alive:hover {
+  animation: none;
+  box-shadow: 0 8px 30px rgba(14, 121, 178, 0.4);
+}
+
+/* ============================================
+   HERO GRADIENT MESH — Animated background
+   ============================================ */
+@keyframes hero-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  33% {
+    background-position: 100% 30%;
+  }
+
+  66% {
+    background-position: 50% 80%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero-gradient-mesh {
+  background:
+    radial-gradient(ellipse 800px 800px at 20% 20%, rgba(14, 121, 178, 0.18), transparent 60%),
+    radial-gradient(ellipse 600px 600px at 80% 10%, rgba(14, 121, 178, 0.12), transparent 55%),
+    radial-gradient(ellipse 500px 500px at 50% 80%, rgba(14, 121, 178, 0.08), transparent 50%),
+    radial-gradient(ellipse 400px 400px at 70% 60%, rgba(219, 226, 239, 0.06), transparent 50%);
+  background-size: 200% 200%;
+  animation: hero-gradient-shift 20s ease-in-out infinite;
+}
+
+/* ============================================
+   MARQUEE EDGE FADE
+   ============================================ */
+.marquee-container {
+  -webkit-mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+  mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+}
+
+/* ============================================
+   DARK SECTION — Now uses morph variables
+   ============================================ */
+.section-dark {
+  background: transparent;
+  color: var(--morph-text);
+}
+
+.section-dark .glass {
+  background: var(--morph-surface);
+  border: 1px solid var(--morph-surface-border);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================
+   PERFORMANCE & ACCESSIBILITY
+   ============================================ */
+
+/* Lenis handles smooth scroll — no CSS scroll-behavior needed */
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
@@ -477,6 +699,14 @@
 
   html {
     scroll-behavior: auto;
+  }
+
+  .hero-gradient-mesh {
+    animation: none;
+  }
+
+  .cta-alive {
+    animation: none;
   }
 }
 

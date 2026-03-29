@@ -8,12 +8,14 @@
 
 import { useState, useTransition } from "react";
 import { submitContact, type ContactFormData } from "@/actions/contact";
-import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, CheckCircle, AlertCircle, User, Mail, MessageSquare, Tag } from "lucide-react";
 
+// Premium High-end Input base
 const inputBase =
-  "w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-accent/60 focus:border-accent/40 transition-all duration-200";
+  "w-full pl-12 pr-4 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:bg-white/10 focus:border-accent/50 focus:ring-4 focus:ring-accent/10 transition-all duration-300";
 
-const labelBase = "block text-xs font-medium text-white/60 mb-1.5 tracking-wide uppercase";
+// Premium animated label
+const labelBase = "block text-[11px] font-semibold text-white/50 mb-2 uppercase tracking-widest group-focus-within:text-accent transition-colors duration-300";
 
 export default function ContactForm({
   defaultSubject = "",
@@ -78,88 +80,100 @@ export default function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {/* Full Name + Email side by side on md+ */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="group">
           <label htmlFor="cf-full_name" className={labelBase}>
             Full Name <span className="text-accent">*</span>
           </label>
-          <input
-            id="cf-full_name"
-            name="full_name"
-            type="text"
-            autoComplete="name"
-            placeholder="Jane Smith"
-            value={form.full_name}
-            onChange={handleChange}
-            disabled={isPending}
-            className={`${inputBase} ${errors.full_name ? "border-red-500/60" : ""}`}
-          />
+          <div className="relative">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-accent transition-colors duration-300 pointer-events-none" />
+            <input
+              id="cf-full_name"
+              name="full_name"
+              type="text"
+              autoComplete="name"
+              placeholder="Jane Smith"
+              value={form.full_name}
+              onChange={handleChange}
+              disabled={isPending}
+              className={`${inputBase} ${errors.full_name ? "border-red-500/60 focus:border-red-500/60 focus:ring-red-500/10" : ""}`}
+            />
+          </div>
           {errors.full_name && (
-            <p className="mt-1.5 text-xs text-red-400">{errors.full_name}</p>
+            <p className="mt-2 text-[11px] font-medium text-red-400 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{errors.full_name}</p>
           )}
         </div>
 
-        <div>
+        <div className="group">
           <label htmlFor="cf-email" className={labelBase}>
             Email <span className="text-accent">*</span>
           </label>
-          <input
-            id="cf-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="jane@example.com"
-            value={form.email}
-            onChange={handleChange}
-            disabled={isPending}
-            className={`${inputBase} ${errors.email ? "border-red-500/60" : ""}`}
-          />
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-accent transition-colors duration-300 pointer-events-none" />
+            <input
+              id="cf-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="jane@example.com"
+              value={form.email}
+              onChange={handleChange}
+              disabled={isPending}
+              className={`${inputBase} ${errors.email ? "border-red-500/60 focus:border-red-500/60 focus:ring-red-500/10" : ""}`}
+            />
+          </div>
           {errors.email && (
-            <p className="mt-1.5 text-xs text-red-400">{errors.email}</p>
+            <p className="mt-2 text-[11px] font-medium text-red-400 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{errors.email}</p>
           )}
         </div>
       </div>
 
       {/* Subject */}
-      <div>
+      <div className="group">
         <label htmlFor="cf-subject" className={labelBase}>
           Subject{" "}
           <span className="text-white/30 normal-case font-normal">(optional)</span>
         </label>
-        <input
-          id="cf-subject"
-          name="subject"
-          type="text"
-          placeholder="e.g. Free Website Audit"
-          value={form.subject}
-          onChange={handleChange}
-          disabled={isPending}
-          className={`${inputBase} ${errors.subject ? "border-red-500/60" : ""}`}
-        />
+        <div className="relative">
+          <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-accent transition-colors duration-300 pointer-events-none" />
+          <input
+            id="cf-subject"
+            name="subject"
+            type="text"
+            placeholder="e.g. Free Website Audit"
+            value={form.subject}
+            onChange={handleChange}
+            disabled={isPending}
+            className={`${inputBase} ${errors.subject ? "border-red-500/60 focus:border-red-500/60 focus:ring-red-500/10" : ""}`}
+          />
+        </div>
         {errors.subject && (
-          <p className="mt-1.5 text-xs text-red-400">{errors.subject}</p>
+          <p className="mt-2 text-[11px] font-medium text-red-400 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{errors.subject}</p>
         )}
       </div>
 
       {/* Message */}
-      <div>
+      <div className="group">
         <label htmlFor="cf-message" className={labelBase}>
           Message <span className="text-accent">*</span>
         </label>
-        <textarea
-          id="cf-message"
-          name="message"
-          rows={4}
-          placeholder="Tell us about your business, goals, or questions..."
-          value={form.message}
-          onChange={handleChange}
-          disabled={isPending}
-          className={`${inputBase} resize-none ${errors.message ? "border-red-500/60" : ""}`}
-        />
+        <div className="relative">
+          <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-white/30 group-focus-within:text-accent transition-colors duration-300 pointer-events-none" />
+          <textarea
+            id="cf-message"
+            name="message"
+            rows={4}
+            placeholder="Tell us about your business, goals, or questions..."
+            value={form.message}
+            onChange={handleChange}
+            disabled={isPending}
+            className={`${inputBase} resize-none ${errors.message ? "border-red-500/60 focus:border-red-500/60 focus:ring-red-500/10" : ""}`}
+          />
+        </div>
         {errors.message && (
-          <p className="mt-1.5 text-xs text-red-400">{errors.message}</p>
+          <p className="mt-2 text-[11px] font-medium text-red-400 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" />{errors.message}</p>
         )}
       </div>
 
@@ -167,36 +181,39 @@ export default function ContactForm({
       <button
         type="submit"
         disabled={isPending || status === "success"}
-        className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 bg-accent hover:bg-accent/90 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:shadow-xl active:scale-[0.98]"
+        className="w-full relative group overflow-hidden flex items-center justify-center gap-2.5 px-6 py-4 bg-accent hover:bg-accent/90 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold tracking-wide rounded-xl transition-all duration-300 text-sm shadow-[0_0_20px_rgba(14,121,178,0.2)] hover:shadow-[0_0_30px_rgba(14,121,178,0.4)] active:scale-[0.98]"
       >
+        {/* Button hover gradient sweep */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
+        
         {isPending ? (
           <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            Sending…
+            <Loader2 className="w-5 h-5 animate-spin relative z-10" />
+            <span className="relative z-10">Sending…</span>
           </>
         ) : status === "success" ? (
           <>
-            <CheckCircle className="w-4 h-4" />
-            Sent!
+            <CheckCircle className="w-5 h-5 relative z-10" />
+            <span className="relative z-10">Message Sent Seamlessly</span>
           </>
         ) : (
-          "Send Message →"
+          <span className="relative z-10 flex items-center gap-2">Initiate Conversation <span className="group-hover:translate-x-1 transition-transform">→</span></span>
         )}
       </button>
 
       {/* Status Banner */}
       {status !== "idle" && statusMessage && (
         <div
-          className={`flex items-start gap-2.5 px-4 py-3 rounded-xl text-sm ${
+          className={`flex items-start gap-3 px-5 py-4 rounded-xl text-sm font-medium border ${
             status === "success"
-              ? "bg-green-500/10 border border-green-500/20 text-green-400"
-              : "bg-red-500/10 border border-red-500/20 text-red-400"
+              ? "bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+              : "bg-red-500/10 border-red-500/20 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
           }`}
         >
           {status === "success" ? (
-            <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" />
+            <CheckCircle className="w-5 h-5 shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+            <AlertCircle className="w-5 h-5 shrink-0" />
           )}
           {statusMessage}
         </div>
@@ -204,3 +221,4 @@ export default function ContactForm({
     </form>
   );
 }
+

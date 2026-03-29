@@ -3,66 +3,70 @@
 import { motion } from "framer-motion";
 
 export default function SocialProof() {
-  const items = [
-    "Invio Social",
-    "Digital Discovery",
-    "Reputation Growth",
-    "Local SEO",
-    "Digital Presence",
-    "Web Development",
-    "Automation Systems",
+  const words = [
+    "digital discovery",
+    "reputation growth",
+    "local seo",
+    "web development",
+    "automation",
   ];
 
-  // Duplicate items for seamless loop
-  const marqueeItems = [...items, ...items];
+  // Quadruple items for seamless ultra-wide loop
+  const marqueeItems = [...words, ...words, ...words, ...words];
 
   return (
-    <section className="bg-primary/[0.03] dark:bg-white/5 py-8 sm:py-12 md:py-16 overflow-hidden border-y border-primary/10 dark:border-white/10 relative">
-      {/* Ambient gradient accent */}
-      <div className="ambient-blob ambient-blob-md" style={{ top: '-150px', right: '20%' }} />
-      {/* Marquee Strip */}
-      <div className="relative w-full overflow-hidden mb-8 sm:mb-12">
+    <section className="py-24 sm:py-32 overflow-hidden relative bg-white dark:bg-[#FBFEF9]">
+      {/* Massive Marquee Strip */}
+      <div className="relative w-full overflow-hidden flex items-center">
         <motion.div
-          className="flex gap-6 sm:gap-8 md:gap-12 whitespace-nowrap"
-          animate={{ x: [0, -2000] }}
+          className="flex whitespace-nowrap items-center"
+          animate={{ x: ["0%", "-50%"] }}
           transition={{
-            duration: 30,
+            duration: 40,
             repeat: Infinity,
             ease: "linear",
-            repeatType: "loop",
           }}
         >
           {marqueeItems.map((item, index) => (
-            <span
-              key={index}
-              className="text-sm sm:text-lg md:text-xl lg:text-2xl font-semibold text-primary dark:text-white/80 flex items-center gap-6 sm:gap-8 md:gap-12 flex-shrink-0"
-            >
-              {item}
-              <span className="text-accent text-2xl">•</span>
-            </span>
+            <div key={index} className="flex items-center shrink-0">
+              <span
+                className="text-[12vw] sm:text-[10vw] font-bold lowercase tracking-tighter leading-none"
+                style={{
+                  WebkitTextStroke: index % 2 === 0 ? "none" : "2px #191923",
+                  color: index % 2 === 0 ? "#191923" : "transparent"
+                }}
+              >
+                {item}
+              </span>
+              <span className="text-black/30 mx-8 md:mx-16 text-[4vw] opacity-50">•</span>
+            </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Mission Section */}
-      <div className="container-max px-4 sm:px-6 md:px-12 lg:px-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center space-y-4 sm:space-y-6 max-w-3xl mx-auto"
-        >
-          <h2 className="heading-lg text-primary dark:text-background">Our Mission</h2>
-          <p className="text-base md:text-lg text-primary dark:text-background/90 leading-relaxed">
-            Invio Social is a digital growth agency that helps local businesses become easily discoverable online.
-            In today's digital world, visibility is everything — and great businesses shouldn't go unnoticed.
-          </p>
-          <p className="text-base md:text-lg text-primary dark:text-background/90 leading-relaxed">
-            We work closely with local businesses to improve their online presence,
-            ensuring the right customers find them at the right time. Your growth is our mission.
-          </p>
-        </motion.div>
+      {/* Core Mission Statement */}
+      <div className="container-max px-6 md:px-12 lg:px-24 mt-20 sm:mt-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-4">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-primary lowercase">
+              our mission
+            </h2>
+            <div className="w-12 h-1 bg-accent mt-6 rounded-full" />
+          </div>
+
+          <div className="lg:col-span-8">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
+              className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-[1.1] text-primary"
+            >
+              visibility is everything. <br />
+              <span className="text-primary/40">we ensure the right customers find you at the right time.</span>
+            </motion.p>
+          </div>
+        </div>
       </div>
     </section>
   );

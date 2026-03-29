@@ -1,197 +1,95 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Mail, Linkedin, Twitter, Instagram } from "lucide-react";
-import Image from "next/image";
-import NewsletterSignup from "@/components/forms/NewsletterSignup";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Linkedin, Instagram } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const footerLinks = [
-    { label: "Home", href: "#home" },
-    { label: "Services", href: "#services" },
-    { label: "About", href: "#about" },
-    { label: "FAQ", href: "#faq" },
-    { label: "Contact", href: "#contact" },
-  ];
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"]
+  });
 
-  const socialLinks = [
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-  ];
+  const opacity = useTransform(scrollYProgress, [0.8, 1], [0.3, 1]);
+  const y = useTransform(scrollYProgress, [0.8, 1], [50, 0]);
 
   return (
-    <footer className="bg-primary dark:bg-primary/95 text-background pt-16 pb-8 border-t border-accent/30">
-      <div className="container-max px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          {/* Brand Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <div className="flex items-center gap-2 mb-4 cursor-interactive hover:opacity-80 transition-opacity">
-              <Image
-                src="/images/logo0.png"
-                alt="Invio Social"
-                width={80}
-                height={30}
-                className="h-5 w-auto drop-shadow-lg"
-              />
-              <span className="font-bold text-background">Invio Social</span>
-            </div>
-            <p className="text-sm text-background/70 leading-relaxed mb-6">
-              A digital growth agency helping local businesses improve discoverability, SEO, and reputation.
-            </p>
+    <footer ref={containerRef} className="relative z-0 h-screen w-full flex flex-col justify-end bg-primary">
+      {/* Sticky container that stays at the bottom */}
+      <div className="sticky bottom-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-end pb-12 pt-24">
+        {/* Subtle Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-accent/10 rounded-full blur-[160px] pointer-events-none" />
 
-            {/* Contact Info */}
-            <div className="space-y-3 text-sm">
-              <a href="mailto:inviosocial@gmail.com" className="flex items-center gap-2 text-background/70 hover:text-accent transition-colors cursor-interactive">
-                <Mail className="w-4 h-4" />
+        <motion.div 
+          style={{ opacity, y }}
+          className="container-max px-6 md:px-12 lg:px-24 relative z-10 flex flex-col items-center text-center mt-auto"
+        >
+            {/* Massive Call to Action */}
+            <div className="w-full mb-20">
+              <h2 className="text-[14vw] sm:text-[12vw] md:text-[10vw] font-bold tracking-tighter lowercase leading-[0.85] mb-8 cursor-interactive group">
+                let&apos;s talk.
+                <span className="block w-full h-[2px] bg-white/20 mt-8 relative overflow-hidden">
+                  <span className="absolute inset-0 bg-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)]" />
+                </span>
+              </h2>
+              
+              <a 
+                href="mailto:inviosocial@gmail.com"
+                className="inline-flex items-center gap-4 text-2xl sm:text-4xl font-medium text-white/60 hover:text-white transition-colors duration-300 cursor-interactive group"
+              >
                 inviosocial@gmail.com
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                  <ArrowRight className="w-6 h-6 transform -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                </div>
               </a>
             </div>
-          </motion.div>
 
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-background mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              {footerLinks.map((link) => (
-                <li key={link.label}>
-                  <motion.a
-                    href={link.href}
-                    className="text-background/70 hover:text-accent transition-colors text-sm cursor-interactive"
-                    whileHover={{ x: 4 }}
+            {/* Bottom Links */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 items-end pt-12 border-t border-white/10 text-left">
+              <div>
+                <span className="font-bold text-xl tracking-tight mb-2 block">Invio Social</span>
+                <p className="text-white/50 text-sm max-w-xs font-medium leading-relaxed">
+                  A digital growth agency building unignorable visibility for local businesses.
+                </p>
+              </div>
+
+              <div className="flex gap-8 text-sm font-bold lowercase text-white/50">
+                {["home", "services", "about", "faq"].map((item) => (
+                  <Link 
+                    key={item}
+                    href={`#${item}`}
+                    className="hover:text-white transition-colors cursor-interactive"
                   >
-                    {link.label}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+                    {item}
+                  </Link>
+                ))}
+              </div>
 
-          {/* Services */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-background mb-4">Services</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Digital Discovery
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Reputation Growth
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Local SEO
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Digital Presence
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Web Development
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  href="#"
-                  className="text-background/70 hover:text-accent transition-colors cursor-interactive"
-                  whileHover={{ x: 4 }}
-                >
-                  Automation Systems
-                </motion.a>
-              </li>
-            </ul>
-          </motion.div>
+              <div className="flex md:justify-end gap-6">
+                {[
+                  { Icon: Linkedin, href: "https://www.linkedin.com/company/inviosocial/" },
+                  { Icon: Instagram, href: "https://www.instagram.com/invio.social/" }
+                ].map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-accent flex items-center justify-center transition-all duration-300 cursor-interactive"
+                  >
+                    <social.Icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
 
-          {/* Newsletter */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-background mb-4">Newsletter</h4>
-            <p className="text-background/70 text-sm mb-4">
-              Stay updated with latest insights and strategies
-            </p>
-            <NewsletterSignup />
-          </motion.div>
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-background/10 my-8"></div>
-
-        {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-6"
-        >
-          <p className="text-background/70 text-sm">
-            © 2026 Invio Social. All rights reserved.
-          </p>
-
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
-            {socialLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  className="w-10 h-10 rounded-full bg-primary/20 hover:bg-accent flex items-center justify-center transition-colors shadow-md hover:shadow-lg hover:shadow-accent/40 cursor-interactive"
-                  aria-label={link.label}
-                  whileHover={{ scale: 1.15 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="w-5 h-5 text-background hover:text-background" />
-                </motion.a>
-              );
-            })}
-          </div>
+            <div className="w-full flex justify-between items-center mt-16 text-xs font-medium text-white/30 uppercase tracking-widest">
+              <span>© {new Date().getFullYear()} Invio Social</span>
+              <span>All rights reserved</span>
+            </div>
         </motion.div>
       </div>
     </footer>

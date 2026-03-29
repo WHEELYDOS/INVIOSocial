@@ -1,113 +1,106 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Lightbulb,
-  Users,
-  Zap,
-  Award,
-} from "lucide-react";
-
-const differentiators = [
-  {
-    id: 1,
-    title: "Focus on Real Growth",
-    description:
-      "We focus on helping businesses attract customers and generate real revenue — not just followers or vanity metrics.",
-    icon: Lightbulb,
-  },
-  {
-    id: 2,
-    title: "Local Business Expertise",
-    description:
-      "We specialize in helping local businesses grow through digital discovery and online visibility.",
-    icon: Users,
-  },
-  {
-    id: 3,
-    title: "Practical Strategies",
-    description:
-      "Our solutions are simple, actionable, and designed to produce measurable improvements in your online presence.",
-    icon: Zap,
-  },
-  {
-    id: 4,
-    title: "Personalized Approach",
-    description:
-      "Every business is different. We analyze your situation and create strategies tailored to your needs.",
-    icon: Award,
-  },
-];
-
-function DifferentiatorCard({
-  item,
-  index,
-}: {
-  item: typeof differentiators[0];
-  index: number;
-}) {
-  const Icon = item.icon;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      className="group p-4 sm:p-6 lg:p-8 rounded-2xl glass bg-white/70 dark:from-primary/20 dark:to-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 shadow-md dark:shadow-lg dark:shadow-accent/10 hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-accent/20 transition-all duration-300 cursor-interactive backdrop-blur-sm card-glow"
-    >
-      <motion.div
-        className="flex items-start gap-3 sm:gap-4"
-        whileHover={{ x: 5 }}
-        transition={{ type: "spring", stiffness: 300 }}
-      >
-        <Icon className="w-6 sm:w-8 h-6 sm:h-8 text-accent mt-1 flex-shrink-0" />
-        <div>
-          <h3 className="heading-md mb-3 text-primary dark:text-background">
-            {item.title}
-          </h3>
-          <p className="text-primary dark:text-background/90 leading-relaxed">
-            {item.description}
-          </p>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
+import { Lightbulb, Users, Zap, Award } from "lucide-react";
 
 export default function WhyChooseUs() {
-  return (
-    <section
-      id="about"
-      className="section-padding bg-transparent relative overflow-hidden"
-    >
-      {/* Ambient gradient blob */}
-      <div className="ambient-blob ambient-blob-lg" style={{ top: '-80px', left: '-120px' }} />
-      <div className="ambient-blob ambient-blob-sm" style={{ bottom: '-50px', right: '-80px' }} />
+  const differentiators = [
+    {
+      id: 1,
+      title: "real growth",
+      description: "We focus on generating real local revenue, not vanity metrics.",
+      icon: Lightbulb,
+      colSpan: "md:col-span-8",
+      bg: "bg-[#F9F7F7] dark:bg-[#191923]",
+      textColor: "text-primary",
+      iconColor: "#0E79B2"
+    },
+    {
+      id: 2,
+      title: "local experts",
+      description: "We master the art of hyper-local digital visibility.",
+      icon: Users,
+      colSpan: "md:col-span-4",
+      bg: "bg-accent",
+      textColor: "text-white",
+      iconColor: "#ffffff"
+    },
+    {
+      id: 3,
+      title: "practical",
+      description: "Simple, actionable, and measurable improvements.",
+      icon: Zap,
+      colSpan: "md:col-span-5",
+      bg: "bg-primary",
+      textColor: "text-white",
+      iconColor: "#F6AE2D"
+    },
+    {
+      id: 4,
+      title: "personalized",
+      description: "Every business is different. We tailor strategies to your needs.",
+      icon: Award,
+      colSpan: "md:col-span-7",
+      bg: "bg-[#F9F7F7] dark:bg-[#20202d]",
+      textColor: "text-primary",
+      iconColor: "#E2574C"
+    },
+  ];
 
-      <div className="container-max relative z-10">
+  return (
+    <section id="about" className="py-24 sm:py-32 relative overflow-hidden bg-white dark:bg-primary">
+      <div className="container-max px-6 md:px-12 lg:px-24 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8"
         >
-          <h2 className="heading-lg mb-4">Why Choose Invio Social?</h2>
-          <p className="text-subtitle max-w-2xl mx-auto">
-            We bring strategic expertise, proven results, and genuine partnership to every engagement
-          </p>
+          <div>
+            <h2 className="text-[10vw] sm:text-[8vw] md:text-[6vw] font-bold tracking-tighter lowercase leading-[0.9] text-primary">
+              why choose <br /> us?
+            </h2>
+          </div>
+          <div className="max-w-md">
+            <p className="text-xl md:text-2xl font-medium text-primary/60 leading-tight">
+              We bring strategic expertise, proven results, and genuine partnership to every engagement.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Differentiators Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {differentiators.map((item, index) => (
-            <DifferentiatorCard key={item.id} item={item} index={index} />
-          ))}
+        {/* Bento Box Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {differentiators.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 0.61, 0.36, 1] }}
+                viewport={{ once: true, margin: "-50px" }}
+                className={`p-10 md:p-14 rounded-[40px] md:rounded-[60px] cursor-interactive group border border-primary/5 ${item.colSpan} ${item.bg} relative overflow-hidden`}
+              >
+                <div className="flex flex-col h-full justify-between relative z-10">
+                  <div className="mb-16">
+                    <Icon className="w-10 h-10 sm:w-14 sm:h-14 mb-8" style={{ color: item.iconColor }} />
+                    <h3 className={`text-3xl sm:text-5xl font-bold tracking-tight lowercase ${item.textColor}`}>
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className={`text-lg sm:text-2xl font-medium opacity-80 leading-tight md:max-w-sm ${item.textColor}`}>
+                    {item.description}
+                  </p>
+                </div>
+
+                {/* Hover Effect */}
+                <span className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-

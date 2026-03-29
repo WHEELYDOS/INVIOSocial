@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 // ---------------------------------------------------------------------------
 // Utility: detect fine pointer (mouse) vs touch/coarse pointer
@@ -10,7 +10,6 @@ function useHasPointer() {
   const [hasPointer, setHasPointer] = useState(false);
 
   useEffect(() => {
-    // SSR-safe: only runs in browser
     const mql = window.matchMedia("(pointer: fine)");
     setHasPointer(mql.matches);
 
@@ -39,253 +38,126 @@ function usePrefersReducedMotion() {
 }
 
 // ---------------------------------------------------------------------------
-// CustomCursor — dot + ring that changes color based on section background
+// CustomCursor — High-end Double Cursor (Dot + Trailer) with mix-blend-mode
 // ---------------------------------------------------------------------------
 export function CustomCursor() {
   const hasPointer = useHasPointer();
   const reducedMotion = usePrefersReducedMotion();
-  const { resolvedTheme } = useTheme();
 
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const [hoverText, setHoverText] = useState("");
 
-  // Smooth trailing for the ring via lerp
-  const mouse = useRef({ x: 0, y: 0 });
-  const ringPos = useRef({ x: 0, y: 0 });
-  const isHovering = useRef(false);
-  const isOverDark = useRef(false);
-  const rafId = useRef<number>(0);
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  // Fast spring for the inner dot
+  const dotSpringConfig = reducedMotion
+    ? { damping: 100, stiffness: 1000 }
+    : { damping: 25, stiffness: 400, mass: 0.2 };
+    
+  // Slower, liquid spring for the outer ring/trailer
+  const ringSpringConfig = reducedMotion
+    ? { damping: 100, stiffness: 1000 }
+    : { damping: 30, stiffness: 150, mass: 0.6 };
+
+  const dotX = useSpring(mouseX, dotSpringConfig);
+  const dotY = useSpring(mouseY, dotSpringConfig);
+
+  const ringX = useSpring(mouseX, ringSpringConfig);
+  const ringY = useSpring(mouseY, ringSpringConfig);
 
   useEffect(() => {
     if (!hasPointer) return;
 
-    const dot = dotRef.current;
-    const ring = ringRef.current;
-    if (!dot || !ring) return;
-
-    // Determine if cursor is over a dark-background section
-    const checkDarkSection = (_x: number, y: number) => {
-      // Check Hero section
-      const hero = document.getElementById("home");
-      if (hero) {
-        const rect = hero.getBoundingClientRect();
-        if (y >= rect.top && y <= rect.bottom) return true;
-      }
-      // Check Footer
-      const footer = document.querySelector("footer");
-      if (footer) {
-        const rect = footer.getBoundingClientRect();
-        if (y >= rect.top && y <= rect.bottom) return true;
-      }
-      return false;
-    };
-
-    // Update cursor colors
-    const updateCursorColor = (overDark: boolean) => {
-      const isDarkTheme = document.documentElement.classList.contains("dark");
-      let dotColor: string;
-      let ringColor: string;
-
-      if (isDarkTheme || overDark) {
-        // Over dark background → white cursor
-        dotColor = "#ffffff";
-        ringColor = "rgba(255, 255, 255, 0.8)";
-      } else {
-        // Over light background → dark cursor
-        dotColor = "#191923";
-        ringColor = "rgba(25, 25, 35, 0.6)";
-      }
-
-      dot.style.backgroundColor = dotColor;
-      ring.style.borderColor = ringColor;
-    };
-
-    // --- Mouse move handler (passive, no state) ---
     const onMouseMove = (e: MouseEvent) => {
-      mouse.current.x = e.clientX;
-      mouse.current.y = e.clientY;
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
 
-      // Move the dot instantly (no lag)
-      dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0) scale(${isHovering.current ? 1.4 : 1})`;
-
-      // Check interactive target
       const target = e.target as HTMLElement;
-      const interactive =
-        target.tagName === "BUTTON" ||
-        target.tagName === "A" ||
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        !!target.closest("button") ||
-        !!target.closest("a") ||
-        target.classList.contains("cursor-interactive");
 
-      if (interactive !== isHovering.current) {
-        isHovering.current = interactive;
-        dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0) scale(${interactive ? 1.4 : 1})`;
-        ring.style.opacity = interactive ? "1" : "0.6";
-        ring.style.borderWidth = interactive ? "2.5px" : "2px";
+      // Look for the closest interactive element or one explicitly stating data-cursor
+      const interactiveEl = target.closest(
+        "button, a, input, textarea, .cursor-interactive, [data-cursor]"
+      );
+
+      if (interactiveEl) {
+        setIsHovering(true);
+        // Extract optional custom text like 'VIEW' or 'DRAG'
+        const customText = interactiveEl.getAttribute("data-cursor");
+        setHoverText(customText || "");
+      } else {
+        setIsHovering(false);
+        setHoverText("");
       }
-
-      // Detect dark section (throttled — check every move for responsiveness)
-      const overDark = checkDarkSection(e.clientX, e.clientY);
-      if (overDark !== isOverDark.current) {
-        isOverDark.current = overDark;
-        updateCursorColor(overDark);
-      }
-    };
-
-    // --- Ring lerp loop (smooth trailing) ---
-    const lerpSpeed = reducedMotion ? 1 : 0.15;
-
-    const animate = () => {
-      ringPos.current.x += (mouse.current.x - ringPos.current.x) * lerpSpeed;
-      ringPos.current.y += (mouse.current.y - ringPos.current.y) * lerpSpeed;
-
-      ring.style.transform = `translate3d(${ringPos.current.x - 18}px, ${ringPos.current.y - 18}px, 0) scale(${isHovering.current ? 1.3 : 1})`;
-
-      rafId.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
-    rafId.current = requestAnimationFrame(animate);
-
-    // Initial color — force update immediately and after a short delay for hydration
-    const isDarkNow = document.documentElement.classList.contains("dark");
-    updateCursorColor(isDarkNow);
-    const timer = setTimeout(() => {
-      const isDarkDelayed = document.documentElement.classList.contains("dark");
-      updateCursorColor(isDarkDelayed);
-    }, 150);
-
-    // Watch for dark class changes on <html> (theme toggle)
-    const observer = new MutationObserver(() => {
-      const isDarkMutated = document.documentElement.classList.contains("dark");
-      updateCursorColor(isDarkMutated || isOverDark.current);
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      cancelAnimationFrame(rafId.current);
-      clearTimeout(timer);
-      observer.disconnect();
     };
-  }, [hasPointer, reducedMotion, resolvedTheme]);
+  }, [hasPointer, mouseX, mouseY]);
 
-  // Don't render anything on touch devices
   if (!hasPointer) return null;
-
-  // Initial color (will be updated dynamically via DOM)
-  const isDarkInit = resolvedTheme === "dark";
-  const initialColor = isDarkInit ? "#ffffff" : "#191923";
-  const initialRingColor = isDarkInit ? "rgba(255, 255, 255, 0.8)" : "rgba(25, 25, 35, 0.6)";
 
   return (
     <>
-      {/* Cursor dot */}
-      <div
-        ref={dotRef}
+      {/* INNER DOT (Fast) */}
+      <motion.div
         aria-hidden="true"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 10,
-          height: 10,
-          borderRadius: "50%",
-          backgroundColor: initialColor,
-          pointerEvents: "none",
-          zIndex: 9999,
-          willChange: "transform",
-          transition: "background-color 0.3s ease, scale 0.15s ease-out",
+          x: dotX,
+          y: dotY,
+          translateX: "-50%",
+          translateY: "-50%",
         }}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-difference"
+        animate={{
+          width: isHovering ? 0 : 8,
+          height: isHovering ? 0 : 8,
+          backgroundColor: "rgba(255, 255, 255, 1)",
+          opacity: isHovering ? 0 : 1,
+        }}
+        transition={{ type: "tween", ease: "backOut", duration: 0.2 }}
       />
 
-      {/* Cursor ring */}
-      <div
-        ref={ringRef}
+      {/* OUTER RING / HOVER STATE (Slow, Flowing) */}
+      <motion.div
         aria-hidden="true"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 36,
-          height: 36,
-          borderRadius: "50%",
-          border: `2px solid ${initialRingColor}`,
-          pointerEvents: "none",
-          zIndex: 9999,
-          opacity: 0.6,
-          willChange: "transform",
-          transition: "opacity 0.2s, border-width 0.2s, border-color 0.3s ease",
+          x: ringX,
+          y: ringY,
+          translateX: "-50%",
+          translateY: "-50%",
         }}
-      />
+        className="fixed top-0 left-0 pointer-events-none z-[9998] flex items-center justify-center rounded-full mix-blend-difference"
+        animate={{
+          width: isHovering ? 72 : 36,
+          height: isHovering ? 72 : 36,
+          backgroundColor: isHovering 
+            ? "rgba(255, 255, 255, 1)" 
+            : "rgba(255, 255, 255, 0)",
+          border: isHovering 
+            ? "0px solid rgba(255, 255, 255, 0)" 
+            : "1px solid rgba(255, 255, 255, 0.4)",
+        }}
+        transition={{ type: "tween", ease: "backOut", duration: 0.3 }}
+      >
+        {/* Optional text revealed on hover inside the expanded cursor */}
+        {hoverText && isHovering && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            className="text-[10px] uppercase font-bold text-black tracking-widest mix-blend-difference whitespace-nowrap"
+          >
+            {hoverText}
+          </motion.span>
+        )}
+      </motion.div>
     </>
   );
 }
 
-// ---------------------------------------------------------------------------
-// MouseSpotlight — subtle gradient glow following the mouse
-// ---------------------------------------------------------------------------
 export function MouseSpotlight() {
-  const hasPointer = useHasPointer();
-  const reducedMotion = usePrefersReducedMotion();
-  const spotRef = useRef<HTMLDivElement>(null);
-  const mouse = useRef({ x: 0, y: 0 });
-  const pos = useRef({ x: 0, y: 0 });
-  const rafId = useRef<number>(0);
-
-  useEffect(() => {
-    if (!hasPointer) return;
-
-    const el = spotRef.current;
-    if (!el) return;
-
-    const onMouseMove = (e: MouseEvent) => {
-      mouse.current.x = e.clientX;
-      mouse.current.y = e.clientY;
-    };
-
-    const lerpSpeed = reducedMotion ? 1 : 0.08;
-
-    const animate = () => {
-      pos.current.x += (mouse.current.x - pos.current.x) * lerpSpeed;
-      pos.current.y += (mouse.current.y - pos.current.y) * lerpSpeed;
-
-      el.style.transform = `translate3d(${pos.current.x - 192}px, ${pos.current.y - 192}px, 0)`;
-
-      rafId.current = requestAnimationFrame(animate);
-    };
-
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
-    rafId.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      cancelAnimationFrame(rafId.current);
-    };
-  }, [hasPointer, reducedMotion]);
-
-  if (!hasPointer) return null;
-
-  return (
-    <div
-      ref={spotRef}
-      aria-hidden="true"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: 384,
-        height: 384,
-        borderRadius: "50%",
-        background:
-          "radial-gradient(circle, rgba(14,121,178,0.15) 0%, transparent 70%)",
-        filter: "blur(40px)",
-        pointerEvents: "none",
-        zIndex: 9998,
-        willChange: "transform",
-      }}
-    />
-  );
+  return null;
 }

@@ -10,6 +10,9 @@ export function ThemeProvider({
   children: ReactNode;
   [key: string]: unknown;
 }) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider forcedTheme="light" {...props}>
+      {children}
+    </NextThemesProvider>
+  );
 }
-

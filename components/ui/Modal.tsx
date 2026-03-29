@@ -65,20 +65,25 @@ export default function Modal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-md"
             onClick={onClose}
             aria-hidden="true"
-          />
+          >
+            {/* Cinematic radial glow behind the modal */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-[800px] h-[800px] bg-accent/10 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[4000ms]" />
+            </div>
+          </motion.div>
 
           {/* Modal Panel */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
               key="modal-panel"
-              initial={{ opacity: 0, scale: 0.93, y: 16 }}
+              initial={{ opacity: 0, scale: 0.93, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.93, y: 16 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              exit={{ opacity: 0, scale: 0.93, y: 20 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className={`relative w-full ${maxWidth} pointer-events-auto`}
               role="dialog"
               aria-modal="true"
