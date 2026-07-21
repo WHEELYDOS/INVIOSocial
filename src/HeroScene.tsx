@@ -19,23 +19,16 @@ import glyphMark from '@/imports/final00.jpg'
 type DeviceTier = 'high' | 'mid' | 'low'
 
 function detectDeviceTier(): DeviceTier {
-  // Prefer reduced motion = low
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'low'
-
-  // Touch-primary + small screen = mobile phone → low
-  const isMobile = window.matchMedia('(max-width: 768px) and (pointer: coarse)').matches
-  if (isMobile) return 'low'
-
-  // Touch-primary + larger screen = tablet → mid
-  const isTablet = window.matchMedia('(max-width: 1024px) and (pointer: coarse)').matches
-  if (isTablet) return 'mid'
-
   // Check for low device memory (Chrome-only API)
   const nav = navigator as Navigator & { deviceMemory?: number }
   if (nav.deviceMemory && nav.deviceMemory <= 4) return 'mid'
 
   // Check hardware concurrency
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) return 'mid'
+
+  // Mobile and tablet devices get mid-tier instead of skipping 3D completely
+  const isTouch = window.matchMedia('(pointer: coarse)').matches
+  if (isTouch) return 'mid'
 
   return 'high'
 }

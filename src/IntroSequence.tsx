@@ -17,8 +17,7 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
   // Decide synchronously so the homepage never flashes before the overlay.
   const [active, setActive] = useState(() => {
     if (typeof window === 'undefined') return false
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) return false
+
     // A hard refresh (or the very first visit) should replay the intro; only
     // in-session React re-mounts should be skipped via the session flag.
     const nav = performance.getEntriesByType(
