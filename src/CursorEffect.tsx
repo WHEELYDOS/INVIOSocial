@@ -23,6 +23,8 @@ export default function CursorEffect() {
     const ringPos = { ...target }
     let hovering = false
     let down = false
+    let isText = false
+    let lastTarget: EventTarget | null = null
     let raf = 0
     let idleTimer = 0
     let isIdle = false
@@ -71,27 +73,18 @@ export default function CursorEffect() {
     const onMove = (e: PointerEvent) => {
       target.x = e.clientX
       target.y = e.clientY
-      
-      const isText = !!(e.target as HTMLElement)?.closest('input, textarea')
-      
-      if (dot.current) {
-        dot.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`
-        dot.current.style.opacity = isText ? '0' : '1'
-      }
-      if (ring.current) {
-        ring.current.style.opacity = isText ? '0' : '1'
-      }
-      if (canvas) {
-        canvas.style.opacity = isText ? '0' : '1'
+
+      if (lastTarget !== e.target) {
+        lastTarget = e.target
+        const el = e.target as HTMLElement
+        // Safely call closest in case it's not an element (e.g. document/SVG)
+        isText = !!(el?.closest && el.closest('input, textarea'))
+        hovering = !!(el?.closest && el.closest('a, button, [role="button"], select'))
       }
 
       pts.push({ x: e.clientX, y: e.clientY, life: 1 })
       if (pts.length > 22) pts.shift()
 
-      const interactive = (e.target as HTMLElement)?.closest(
-        'a, button, [role="button"], select',
-      )
-      hovering = !!interactive
       resetIdleTimer()
     }
 
@@ -100,6 +93,19 @@ export default function CursorEffect() {
 
     const tick = () => {
       if (isIdle) return
+
+      if (dot.current) {
+        dot.current.style.transform = `translate3d(${target.x}px, ${target.y}px, 0) translate(-50%, -50%)`
+        dot.current.style.opacity = isText ? '0' : '1'
+      }
+
+      if (ring.current) {
+        ring.current.style.opacity = isText ? '0' : '1'
+      }
+
+      if (canvas) {
+        canvas.style.opacity = isText ? '0' : '1'
+      }
 
       // ring eases toward the pointer for a springy lag
       ringPos.x += (target.x - ringPos.x) * 0.16
