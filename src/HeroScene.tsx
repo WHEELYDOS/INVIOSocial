@@ -59,7 +59,7 @@ class WebGLErrorBoundary extends Component<
 /* 3D Knot — with tier-aware complexity                                */
 /* ------------------------------------------------------------------ */
 
-function Knot({ pointer, tier }: { pointer: { x: number; y: number }; tier: DeviceTier }) {
+function Knot({ tier }: { tier: DeviceTier }) {
   const group = useRef<Group>(null)
 
   useFrame((_, delta) => {
@@ -68,9 +68,6 @@ function Knot({ pointer, tier }: { pointer: { x: number; y: number }; tier: Devi
     // slow, elegant continuous rotation
     g.rotation.y += delta * 0.22
     g.rotation.z += delta * 0.05
-    // very gentle parallax — barely reacts to the cursor
-    g.rotation.x += (pointer.y * 0.06 - g.rotation.x) * 0.02
-    g.position.x += (pointer.x * 0.08 - g.position.x) * 0.02
   })
 
   // Reduced geometry on mid-tier devices
@@ -130,7 +127,6 @@ function StaticFallback() {
 /* ------------------------------------------------------------------ */
 
 export default function HeroScene() {
-  const [pointer, setPointer] = useState({ x: 0, y: 0 })
   const [tier, setTier] = useState<DeviceTier>('high')
 
   useEffect(() => {
@@ -154,17 +150,7 @@ export default function HeroScene() {
 
   return (
     <WebGLErrorBoundary fallback={fallbackEl}>
-      <div
-        className="h-[440px] w-full xl:h-[580px]"
-        onPointerMove={(e) => {
-          const r = e.currentTarget.getBoundingClientRect()
-          setPointer({
-            x: ((e.clientX - r.left) / r.width - 0.5) * 2,
-            y: ((e.clientY - r.top) / r.height - 0.5) * 2,
-          })
-        }}
-        onPointerLeave={() => setPointer({ x: 0, y: 0 })}
-      >
+      <div className="h-[440px] w-full xl:h-[580px]">
         <Canvas
           dpr={tier === 'mid' ? [1, 1.5] : [1, 2]}
           shadows={tier !== 'mid'}
@@ -190,7 +176,7 @@ export default function HeroScene() {
             <Float speed={1.4} rotationIntensity={0.25} floatIntensity={0.5}>
               {/* Center guarantees the object is framed, never clipped */}
               <Center>
-                <Knot pointer={pointer} tier={tier} />
+                <Knot tier={tier} />
               </Center>
             </Float>
 
