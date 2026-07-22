@@ -1,5 +1,5 @@
 import { Suspense, useRef, useState, useEffect, Component, type ReactNode } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import {
   Environment,
   Lightformer,
@@ -7,6 +7,7 @@ import {
   ContactShadows,
   Center,
   MeshTransmissionMaterial,
+  Html,
 } from '@react-three/drei'
 import { ACESFilmicToneMapping } from 'three'
 import type { Group } from 'three'
@@ -70,26 +71,26 @@ function Knot({ tier }: { tier: DeviceTier }) {
     g.rotation.z += delta * 0.05
   })
 
-  // Reduced geometry on mid-tier devices
-  const segments = tier === 'mid' ? 128 : 320
-  const radialSegments = tier === 'mid' ? 24 : 48
+  // Reduced geometry for lighter rendering
+  const segments = tier === 'mid' ? 64 : 150
+  const radialSegments = tier === 'mid' ? 16 : 32
 
   return (
     <group ref={group}>
-      <mesh castShadow>
+      <mesh castShadow={tier !== 'mid'}>
         <torusKnotGeometry args={[1, 0.32, segments, radialSegments, 2, 3]} />
         <MeshTransmissionMaterial
-          samples={tier === 'mid' ? 4 : 10}
-          resolution={tier === 'mid' ? 256 : 512}
+          samples={tier === 'mid' ? 3 : 5}
+          resolution={tier === 'mid' ? 128 : 256}
           thickness={0.9}
           roughness={0.06}
           ior={1.42}
           chromaticAberration={tier === 'mid' ? 0.04 : 0.12}
-          anisotropy={0.4}
-          distortion={0.2}
-          distortionScale={0.3}
-          temporalDistortion={0.1}
-          clearcoat={1}
+          anisotropy={0.2}
+          distortion={0.1}
+          distortionScale={0.2}
+          temporalDistortion={tier === 'mid' ? 0 : 0.1}
+          clearcoat={tier === 'mid' ? 0 : 1}
           clearcoatRoughness={0.1}
           attenuationColor="#a8dadc"
           attenuationDistance={1.6}
@@ -98,6 +99,68 @@ function Knot({ tier }: { tier: DeviceTier }) {
         />
       </mesh>
     </group>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* Video Exporter Component                                            */
+/* ------------------------------------------------------------------ */
+
+function VideoExporter() {
+  const { gl } = useThree()
+  const [recording, setRecording] = useState(false)
+
+  const startRecording = () => {
+    if (recording) return
+    setRecording(true)
+    
+    // Capture at 60fps
+    const stream = gl.domElement.captureStream(60)
+    
+    // Attempt to use MP4 if supported, else fallback to WebM
+    let mimeType = 'video/webm'
+    if (MediaRecorder.isTypeSupported('video/mp4')) {
+      mimeType = 'video/mp4'
+    }
+
+    const mediaRecorder = new MediaRecorder(stream, { mimeType })
+    const chunks: Blob[] = []
+
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.push(e.data)
+    }
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: mimeType })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = mimeType === 'video/mp4' ? '3d_model.mp4' : '3d_model.webm'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      setRecording(false)
+    }
+
+    mediaRecorder.start()
+    
+    // Record for 6 seconds
+    setTimeout(() => {
+      mediaRecorder.stop()
+    }, 6000)
+  }
+
+  return (
+    <Html position={[-3.5, 1.5, 0]} center>
+      <button
+        onClick={startRecording}
+        className="rounded bg-strawberry px-4 py-2 text-xs font-bold text-honeydew shadow-lg transition-transform hover:scale-105 active:scale-95"
+        style={{ pointerEvents: 'auto', minWidth: '140px' }}
+      >
+        {recording ? 'Recording (6s)...' : 'Export Video'}
+      </button>
+    </Html>
   )
 }
 
@@ -152,14 +215,14 @@ export default function HeroScene() {
     <WebGLErrorBoundary fallback={fallbackEl}>
       <div className="h-[440px] w-full xl:h-[580px]">
         <Canvas
-          dpr={tier === 'mid' ? [1, 1.5] : [1, 2]}
+          dpr={tier === 'mid' ? 1 : [1, 1.5]}
           shadows={tier !== 'mid'}
           gl={{
-            antialias: true,
+            antialias: tier !== 'mid',
             alpha: true,
             toneMapping: ACESFilmicToneMapping,
             toneMappingExposure: 1.15,
-            powerPreference: tier === 'mid' ? 'low-power' : 'high-performance',
+            powerPreference: 'low-power',
           }}
           // pulled back + narrower fov so the knot never crops
           camera={{ position: [0, 0.3, 7], fov: 30 }}
@@ -172,6 +235,9 @@ export default function HeroScene() {
             shadow-mapSize={tier === 'mid' ? [512, 512] : [1024, 1024]}
           />
           <directionalLight position={[-6, -2, 2]} intensity={0.6} color="#457b9d" />
+          
+          <VideoExporter />
+          
           <Suspense fallback={null}>
             <Float speed={1.4} rotationIntensity={0.25} floatIntensity={0.5}>
               {/* Center guarantees the object is framed, never clipped */}
@@ -193,38 +259,40 @@ export default function HeroScene() {
             )}
 
             {/* studio lighting rig → streaked speculars across the glass */}
-            <Environment resolution={tier === 'mid' ? 256 : 512}>
-              <group rotation={[0, 0, 0]}>
-                <Lightformer
-                  form="rect"
-                  intensity={3}
-                  position={[3, 3, 4]}
-                  scale={[7, 7, 1]}
-                  color="#f1faee"
-                />
-                <Lightformer
-                  form="rect"
-                  intensity={2}
-                  position={[-5, 2, -3]}
-                  scale={[6, 6, 1]}
-                  color="#a8dadc"
-                />
-                <Lightformer
-                  form="ring"
-                  intensity={1.4}
-                  position={[0, -4, 3]}
-                  scale={[8, 3, 1]}
-                  color="#457b9d"
-                />
-                <Lightformer
-                  form="rect"
-                  intensity={1.2}
-                  position={[0, 4, -5]}
-                  scale={[10, 2, 1]}
-                  color="#e63946"
-                />
-              </group>
-            </Environment>
+            {tier !== 'mid' && (
+              <Environment resolution={256}>
+                <group rotation={[0, 0, 0]}>
+                  <Lightformer
+                    form="rect"
+                    intensity={3}
+                    position={[3, 3, 4]}
+                    scale={[7, 7, 1]}
+                    color="#f1faee"
+                  />
+                  <Lightformer
+                    form="rect"
+                    intensity={2}
+                    position={[-5, 2, -3]}
+                    scale={[6, 6, 1]}
+                    color="#a8dadc"
+                  />
+                  <Lightformer
+                    form="ring"
+                    intensity={1.4}
+                    position={[0, -4, 3]}
+                    scale={[8, 3, 1]}
+                    color="#457b9d"
+                  />
+                  <Lightformer
+                    form="rect"
+                    intensity={1.2}
+                    position={[0, 4, -5]}
+                    scale={[10, 2, 1]}
+                    color="#e63946"
+                  />
+                </group>
+              </Environment>
+            )}
           </Suspense>
         </Canvas>
       </div>

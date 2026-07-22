@@ -23,8 +23,7 @@ import Lenis from 'lenis'
 
 const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
-// Code-split the three.js scene so it never blocks first paint.
-const HeroScene = lazy(() => import('@/HeroScene'))
+import HeroScene from '@/HeroScene'
 
 /* ------------------------------------------------------------------ */
 /* Brand mark — the "8" / infinity loop that signs the whole site      */
@@ -230,12 +229,15 @@ function ParallaxLayer({
 /* ------------------------------------------------------------------ */
 
 function ScrollProgress() {
-  const [p, setP] = useState(0)
+  const barRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     let raf = 0
     const update = () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight
-      setP(h > 0 ? window.scrollY / h : 0)
+      if (barRef.current) {
+        const h = document.documentElement.scrollHeight - window.innerHeight
+        const p = h > 0 ? window.scrollY / h : 0
+        barRef.current.style.transform = `scaleX(${p})`
+      }
       raf = 0
     }
     const onScroll = () => {
@@ -251,10 +253,11 @@ function ScrollProgress() {
     }
   }, [])
   return (
-    <div className="fixed left-0 top-0 z-[95] h-[3px] w-full bg-transparent">
+    <div className="fixed left-0 top-0 z-[95] h-[3px] w-full bg-transparent pointer-events-none">
       <div
-        className="scroll-progress-fill h-full origin-left"
-        style={{ transform: `scaleX(${p})` }}
+        ref={barRef}
+        className="scroll-progress-fill h-full origin-left bg-gradient-to-r from-strawberry to-aero"
+        style={{ transform: 'scaleX(0)', willChange: 'transform' }}
       />
     </div>
   )
@@ -881,6 +884,8 @@ export default function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (window.matchMedia('(pointer: coarse)').matches) return // skip Lenis on touch devices
+
     const lenis = new Lenis({
       duration: 1.35,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
