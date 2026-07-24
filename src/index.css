@@ -676,7 +676,7 @@ html.lenis body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   animation: grain-shift 0.8s steps(6) infinite;
-  will-change: transform;
+  contain: strict;
   backface-visibility: hidden;
 }
 
@@ -731,6 +731,53 @@ html.lenis body {
   .ripple-ring,
   .streak-line {
     display: none !important;
+  }
+  .cta-pulse {
+    animation: none !important;
+  }
+  .card-glow {
+    animation: none !important;
+  }
+}
+
+/* ========================================================= */
+/* LOW-END DEVICE OPTIMIZATIONS                                */
+/* Touch / mobile devices get lighter compositing              */
+/* ========================================================= */
+
+@media (hover: none) {
+  /* Stop the grain animation — keep the static texture */
+  .noise-grain {
+    animation: none;
+    opacity: 0.02;
+  }
+
+  /* Hide ripple rings entirely — purely decorative and expensive */
+  .ripple-ring {
+    display: none;
+  }
+
+  /* Simplify dot grid — disable the pulse animation */
+  .dot-grid-bg {
+    animation: none;
+    opacity: 0.04;
+  }
+}
+
+/* Small screens: downgrade backdrop-blur to solid backgrounds */
+@media (max-width: 768px) {
+  /* Nav: solid bg instead of expensive backdrop-blur */
+  header.sticky {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(11, 22, 38, 0.95) !important;
+  }
+
+  /* Mobile nav: solid bg instead of backdrop-blur-xl */
+  nav[aria-label="Mobile navigation"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(19, 37, 60, 0.98) !important;
   }
 }
 

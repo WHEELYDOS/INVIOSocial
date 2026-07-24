@@ -17,6 +17,8 @@ export default function CursorEffect() {
   useEffect(() => {
     // Skip on touch / coarse pointers — a custom cursor only helps a mouse.
     if (!window.matchMedia('(pointer: fine)').matches) return
+    // Skip when user prefers reduced motion — saves GPU budget on low-end devices.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     setEnabled(true)
 
     const target = { x: innerWidth / 2, y: innerHeight / 2 }

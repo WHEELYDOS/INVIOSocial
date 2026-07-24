@@ -219,7 +219,7 @@ function ParallaxLayer({
 }) {
   const ref = useParallax(strength)
   return (
-    <div ref={ref} className={className} style={{ willChange: 'transform' }}>
+    <div ref={ref} className={className}>
       {children}
     </div>
   )
@@ -258,7 +258,7 @@ function ScrollProgress() {
       <div
         ref={barRef}
         className="scroll-progress-fill h-full origin-left bg-gradient-to-r from-strawberry to-aero"
-        style={{ transform: 'scaleX(0)', willChange: 'transform' }}
+        style={{ transform: 'scaleX(0)' }}
       />
     </div>
   )
@@ -982,21 +982,21 @@ export default function App() {
       <section className="relative overflow-hidden" aria-labelledby="hero-heading">
         <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
           <div
-            className="absolute -left-[10%] top-[-20%] h-[70vh] w-[70vh] rounded-full blur-[100px]"
+            className="absolute -left-[10%] top-[-20%] h-[70vh] w-[70vh] rounded-full blur-[60px]"
             style={{
               background: 'radial-gradient(circle, rgba(69,123,157,0.4), transparent 65%)',
               animation: 'aurora-a 18s ease-in-out infinite',
             }}
           />
           <div
-            className="absolute right-[-10%] top-[10%] h-[60vh] w-[60vh] rounded-full blur-[100px]"
+            className="absolute right-[-10%] top-[10%] h-[60vh] w-[60vh] rounded-full blur-[60px]"
             style={{
               background: 'radial-gradient(circle, rgba(168,218,220,0.25), transparent 65%)',
               animation: 'aurora-b 22s ease-in-out infinite',
             }}
           />
           <div
-            className="absolute bottom-[-15%] left-[35%] h-[45vh] w-[45vh] rounded-full blur-[110px]"
+            className="absolute bottom-[-15%] left-[35%] h-[45vh] w-[45vh] rounded-full blur-[70px]"
             style={{
               background: 'radial-gradient(circle, rgba(230,57,70,0.14), transparent 65%)',
               animation: 'aurora-a 26s ease-in-out infinite reverse',
@@ -1085,8 +1085,9 @@ export default function App() {
               <span className="text-xs text-frosted/50">Free strategy session - No commitment</span>
             </div>
           </div>
-
+          <div className="hidden md:block">
             <HeroScene />
+          </div>
         </div>
       </section>
 
