@@ -23,7 +23,8 @@ import Lenis from 'lenis'
 
 const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
-import HeroScene from '@/HeroScene'
+// Code-split the three.js scene so it never blocks first paint.
+const HeroScene = lazy(() => import('@/HeroScene'))
 
 /* ------------------------------------------------------------------ */
 /* Brand mark — the "8" / infinity loop that signs the whole site      */
