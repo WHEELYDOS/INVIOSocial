@@ -159,10 +159,13 @@ let parallaxListenerAttached = false
 
 function updateAllParallax() {
   const vh = window.innerHeight
-  for (const { el, strength } of parallaxEntries) {
+  const updates = parallaxEntries.map(({ el, strength }) => {
     const rect = el.getBoundingClientRect()
     const center = rect.top + rect.height / 2 - vh / 2
-    el.style.transform = `translate3d(0, ${(-center * strength).toFixed(1)}px, 0)`
+    return { el, transform: `translate3d(0, ${(-center * strength).toFixed(1)}px, 0)` }
+  })
+  for (const { el, transform } of updates) {
+    el.style.transform = transform
   }
   parallaxRaf = 0
 }
