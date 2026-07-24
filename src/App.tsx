@@ -1,6 +1,4 @@
 import {
-  lazy,
-  Suspense,
   useCallback,
   useEffect,
   useRef,
@@ -23,8 +21,7 @@ import Lenis from 'lenis'
 
 const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
-// Code-split the three.js scene so it never blocks first paint.
-const HeroScene = lazy(() => import('@/HeroScene'))
+import HeroScene from '@/HeroScene'
 
 /* ------------------------------------------------------------------ */
 /* Brand mark — the "8" / infinity loop that signs the whole site      */
@@ -1086,23 +1083,7 @@ export default function App() {
             </div>
           </div>
 
-          <Suspense
-            fallback={
-              <div className="flex h-[440px] w-full items-center justify-center xl:h-[580px]">
-              <img
-                  src={glyphMark}
-                  alt="Invio Social infinity mark representing continuous automated workflows"
-                  className="h-52 w-52 rounded-2xl bg-honeydew object-contain p-4"
-                  width={208}
-                  height={208}
-                  fetchPriority="high"
-                  decoding="async"
-                />
-              </div>
-            }
-          >
             <HeroScene />
-          </Suspense>
         </div>
       </section>
 
