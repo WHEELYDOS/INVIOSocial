@@ -1015,8 +1015,8 @@ export default function App() {
           />
         </div>
 
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-center gap-6 sm:gap-8 px-6 lg:px-16 pb-16 pt-12 md:pb-20 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-28 lg:pt-24">
-          <div>
+        <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-center gap-6 sm:gap-8 px-6 lg:px-16 pb-16 pt-12 md:pb-20 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-28 lg:pt-24 relative">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left z-10">
             {/* Badge — pop-in animation */}
             <div
               className="mb-6 inline-flex items-center gap-2 border border-steel/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-frosted/70"
@@ -1066,12 +1066,12 @@ export default function App() {
 
             {/* CTAs — gentle rise, later delay */}
             <div
-              className="mt-8 flex flex-col items-start gap-2"
+              className="mt-8 flex flex-col items-center lg:items-start gap-2"
               style={{
                 animation: 'gentle-rise 0.8s ease-out 0.65s both',
               }}
             >
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                 <ArrowCta pulse onClick={openBooking}>Book a call</ArrowCta>
                 <a
                   href="#services"
@@ -1085,7 +1085,7 @@ export default function App() {
               <span className="text-xs text-frosted/50">Free strategy session - No commitment</span>
             </div>
           </div>
-          <div className="hidden md:block">
+          <div className="relative w-full flex justify-center -mt-4 sm:-mt-8 lg:mt-0 z-0 pointer-events-none">
             <HeroScene />
           </div>
         </div>
