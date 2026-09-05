@@ -979,7 +979,8 @@ export default function App() {
       <main>
 
       {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden" aria-labelledby="hero-heading">
+      <section className="relative overflow-hidden min-h-[90vh] flex items-center" aria-labelledby="hero-heading">
+        {/* Aurora background blobs */}
         <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
           <div
             className="absolute -left-[10%] top-[-20%] h-[70vh] w-[70vh] rounded-full blur-[60px]"
@@ -1015,78 +1016,118 @@ export default function App() {
           />
         </div>
 
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-center gap-6 sm:gap-8 px-6 lg:px-16 pb-16 pt-12 md:pb-20 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-28 lg:pt-24 relative">
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left z-10">
-            {/* Badge — pop-in animation */}
-            <div
-              className="mb-6 inline-flex items-center gap-2 border border-steel/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-frosted/70"
-              style={{
-                borderRadius: 3,
-                animation: 'pop-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.1s both',
-              }}
-            >
-              <InfinityGlyph size={18} color="#457b9d" stroke={5} /> Website &middot;
-              Automation Agency
-            </div>
+        {/* Two-column hero layout */}
+        <div className="mx-auto w-full max-w-[1600px] px-6 lg:px-16 py-16 sm:py-20 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
 
-            {/* Heading — elastic spring, staggered per line */}
-            <h1
-              id="hero-heading"
-              className="font-display text-4xl font-extrabold leading-[0.98] tracking-tight text-honeydew sm:text-6xl lg:text-7xl xl:text-[7.5rem]"
-              style={{ perspective: '600px' }}
-            >
-              <span
-                className="block"
+            {/* Left column — text content */}
+            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl pointer-events-none">
+              {/* Badge */}
+              <div
+                className="mb-8 inline-flex items-center gap-2.5 border border-steel/30 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] text-frosted/80 bg-ink/60 backdrop-blur-md pointer-events-auto"
                 style={{
-                  animation: 'hero-word 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.15s both',
+                  borderRadius: 4,
+                  animation: 'pop-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.1s both',
+                  boxShadow: '0 0 20px rgba(69,123,157,0.15), inset 0 1px 0 rgba(255,255,255,0.06)',
                 }}
               >
-                Automation
-              </span>
-              <span
-                className="block"
-                style={{
-                  animation: 'hero-word 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.35s both',
-                }}
-              >
-                that <span className="text-strawberry">runs itself.</span>
-              </span>
-            </h1>
-
-            {/* Subtext — gentle rise */}
-            <p
-              className="mt-6 max-w-md text-base sm:text-lg leading-relaxed text-frosted/70 xl:max-w-lg xl:text-xl"
-              style={{
-                animation: 'gentle-rise 0.8s ease-out 0.5s both',
-              }}
-            >
-              We design sharp websites and wire the automation loops behind them -
-              so your business keeps moving while you don't have to.
-            </p>
-
-            {/* CTAs — gentle rise, later delay */}
-            <div
-              className="mt-8 flex flex-col items-center lg:items-start gap-2"
-              style={{
-                animation: 'gentle-rise 0.8s ease-out 0.65s both',
-              }}
-            >
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                <ArrowCta pulse onClick={openBooking}>Book a call</ArrowCta>
-                <a
-                  href="#services"
-                  className="group relative overflow-hidden border border-steel/40 px-6 py-3 font-display text-sm font-semibold text-frosted/80 transition-all duration-300 hover:border-steel hover:text-honeydew"
-                  style={{ borderRadius: 4 }}
-                >
-                  <span className="relative z-10">See what we build</span>
-                  <span className="absolute inset-0 origin-left scale-x-0 bg-steel transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                </a>
+                <InfinityGlyph size={18} color="#457b9d" stroke={5} />Website &middot;
+                Automation Agency
               </div>
-              <span className="text-xs text-frosted/50">Free strategy session - No commitment</span>
+
+              {/* Heading */}
+              <h1
+                id="hero-heading"
+                className="font-display font-extrabold tracking-[-0.03em] text-honeydew"
+                style={{
+                  perspective: '600px',
+                  fontSize: 'clamp(2.5rem, 7vw, 7rem)',
+                  lineHeight: 0.95,
+                  letterSpacing: '-0.03em',
+                }}
+              >
+                <span
+                  className="block"
+                  style={{
+                    animation: 'hero-word 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.15s both',
+                    textShadow: '0 2px 40px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  Automation
+                </span>
+                <span
+                  className="block mt-1 sm:mt-2"
+                  style={{
+                    animation: 'hero-word 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.35s both',
+                    textShadow: '0 2px 40px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  that{' '}
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #e63946 0%, #ff6b7a 50%, #e63946 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    runs itself.
+                  </span>
+                </span>
+              </h1>
+
+              {/* Subtext */}
+              <p
+                className="mt-7 max-w-xl text-base sm:text-lg lg:text-xl leading-relaxed font-medium"
+                style={{
+                  animation: 'gentle-rise 0.8s ease-out 0.5s both',
+                  color: 'rgba(168,218,220,0.85)',
+                  textShadow: '0 1px 20px rgba(0,0,0,0.5)',
+                }}
+              >
+                We design sharp websites and wire the automation loops behind them —
+                so your business keeps moving while you don't have to.
+              </p>
+
+              {/* CTAs */}
+              <div
+                className="mt-10 flex flex-col items-center lg:items-start gap-3 pointer-events-auto"
+                style={{
+                  animation: 'gentle-rise 0.8s ease-out 0.65s both',
+                }}
+              >
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                  <ArrowCta pulse onClick={openBooking}>Book a call</ArrowCta>
+                  <a
+                    href="#services"
+                    className="group relative overflow-hidden border border-steel/40 px-6 py-3 font-display text-sm font-semibold text-frosted/80 transition-all duration-300 hover:border-steel hover:text-honeydew bg-ink/50 backdrop-blur-md"
+                    style={{ borderRadius: 4 }}
+                  >
+                    <span className="relative z-10">See what we build</span>
+                    <span className="absolute inset-0 origin-left scale-x-0 bg-steel transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                  </a>
+                </div>
+                <span
+                  className="text-xs text-frosted/50 bg-ink/50 px-3 py-1.5 rounded-sm backdrop-blur-md mt-2"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
+                >
+                  Free strategy session — No commitment
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="relative w-full flex justify-center -mt-4 sm:-mt-8 lg:mt-0 z-0 pointer-events-none">
-            <HeroScene />
+
+            {/* Right column — Spline 3D scene */}
+            <div
+              className="flex-1 relative w-full pointer-events-none"
+              style={{
+                minHeight: '400px',
+                height: 'clamp(400px, 50vh, 650px)',
+              }}
+              aria-hidden
+            >
+              <HeroScene />
+            </div>
+
           </div>
         </div>
       </section>

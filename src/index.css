@@ -901,3 +901,22 @@ textarea.modal-input {
 input, textarea {
   cursor: text !important;
 }
+
+/* ========================================================= */
+/* SPLINE 3D SCENE — hide native cursor, allow mouse tracking */
+/* The scene tracks the mouse for 3D interaction but the      */
+/* native cursor is hidden so the custom cursor shows instead. */
+/* ========================================================= */
+
+[aria-hidden] > div > canvas,
+[aria-hidden] > div > iframe {
+  cursor: none !important;
+}
+
+/* Spline runtime injects a canvas – ensure it fills its container */
+[aria-hidden] > div > canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+

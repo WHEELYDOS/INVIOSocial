@@ -1,124 +1,176 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { Suspense, useRef, useState, useEffect } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import {
+  Environment,
+  Lightformer,
+  Float,
+  ContactShadows,
+  Center,
+  MeshTransmissionMaterial,
+} from '@react-three/drei'
+import { ACESFilmicToneMapping } from 'three'
+import type { Group } from 'three'
+import glyphMark from '@/imports/final00.jpg'
 
-/* ------------------------------------------------------------------ */
-/* Low-end device detection                                            */
-/* Skip the heavy Spline WebGL scene on devices that can't handle it  */
-/* ------------------------------------------------------------------ */
+/* An abstract glassy infinity-knot — echoes the brand "8", reads as flow. */
+function Knot({ pointer }: { pointer: { x: number; y: number } }) {
+  const group = useRef<Group>(null)
 
-function isLowEndDevice(): boolean {
-  if (typeof window === 'undefined') return true;
+  useFrame((_, delta) => {
+    const g = group.current
+    if (!g) return
+    // slow, elegant continuous rotation
+    g.rotation.y += delta * 0.22
+    g.rotation.z += delta * 0.05
+    // very gentle parallax — barely reacts to the cursor
+    g.rotation.x += (pointer.y * 0.06 - g.rotation.x) * 0.02
+    g.position.x += (pointer.x * 0.08 - g.position.x) * 0.02
+  })
 
-  // Navigator hints (Chromium-based browsers)
-  const nav = navigator as Navigator & {
-    deviceMemory?: number;
-    hardwareConcurrency?: number;
-    connection?: { effectiveType?: string; saveData?: boolean };
-  };
-
-  // Very low memory (≤ 2GB)
-  if (nav.deviceMemory && nav.deviceMemory <= 2) return true;
-
-  // Very few CPU cores
-  if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 2) return true;
-
-  // Slow connection or data-saver mode
-  if (nav.connection?.saveData) return true;
-  if (nav.connection?.effectiveType === '2g' || nav.connection?.effectiveType === 'slow-2g') return true;
-
-  // Touch device with small screen (likely a phone)
-  if (window.matchMedia('(pointer: coarse)').matches && window.innerWidth < 768) return true;
-
-  return false;
+  return (
+    <group ref={group}>
+      <mesh castShadow>
+        {/* smooth, high-resolution tube → refined glass, not low-poly */}
+        <torusKnotGeometry args={[1, 0.32, 320, 48, 2, 3]} />
+        <MeshTransmissionMaterial
+          samples={10}
+          resolution={512}
+          thickness={0.9}
+          roughness={0.06}
+          ior={1.42}
+          chromaticAberration={0.12}
+          anisotropy={0.4}
+          distortion={0.2}
+          distortionScale={0.3}
+          temporalDistortion={0.1}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
+          attenuationColor="#a8dadc"
+          attenuationDistance={1.6}
+          color="#dff1f2"
+          background={undefined}
+        />
+      </mesh>
+    </group>
+  )
 }
 
-/* ------------------------------------------------------------------ */
-/* Lazy-loaded Spline (only downloaded on capable devices)             */
-/* ------------------------------------------------------------------ */
-
-const LazySpline = lazy(() => import('@splinetool/react-spline'));
-
-/* ------------------------------------------------------------------ */
-/* Lightweight CSS fallback for low-end devices                        */
-/* Animated gradient orb that echoes the 3D scene's visual feel       */
-/* ------------------------------------------------------------------ */
-
-function HeroFallback() {
+function StaticFallback() {
   return (
-    <div className="relative h-[300px] md:h-[500px] w-full overflow-hidden xl:h-[700px] flex items-center justify-center">
-      {/* Outer glow */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: '60%',
-          height: '60%',
-          background: 'radial-gradient(circle, rgba(69,123,157,0.3) 0%, rgba(168,218,220,0.15) 40%, transparent 70%)',
-          animation: 'aurora-a 12s ease-in-out infinite',
-        }}
-      />
-      {/* Inner accent */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: '35%',
-          height: '35%',
-          background: 'radial-gradient(circle, rgba(168,218,220,0.25) 0%, rgba(69,123,157,0.1) 50%, transparent 75%)',
-          animation: 'aurora-b 16s ease-in-out infinite',
-        }}
-      />
-      {/* Strawberry dot */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: '8%',
-          height: '8%',
-          background: 'radial-gradient(circle, rgba(230,57,70,0.35), transparent 70%)',
-          filter: 'blur(8px)',
-        }}
+    <div className="flex h-full w-full items-center justify-center">
+      <img
+        src={glyphMark}
+        alt="Invio Social infinity mark"
+        className="h-52 w-52 rounded-2xl bg-honeydew object-contain p-4"
+        style={{ filter: 'drop-shadow(0 24px 40px rgba(0,0,0,0.4))' }}
       />
     </div>
-  );
+  )
 }
-
-/* ------------------------------------------------------------------ */
-/* Loading placeholder (shown while Spline downloads)                  */
-/* ------------------------------------------------------------------ */
-
-function SplineLoadingPlaceholder() {
-  return (
-    <div className="relative h-[300px] md:h-[500px] w-full overflow-hidden xl:h-[700px] flex items-center justify-center">
-      <div
-        className="absolute rounded-full opacity-50"
-        style={{
-          width: '40%',
-          height: '40%',
-          background: 'radial-gradient(circle, rgba(69,123,157,0.2), transparent 70%)',
-          animation: 'aurora-a 8s ease-in-out infinite',
-        }}
-      />
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Main export                                                         */
-/* ------------------------------------------------------------------ */
 
 export default function HeroScene() {
-  const lowEnd = useMemo(() => isLowEndDevice(), []);
+  const [pointer, setPointer] = useState({ x: 0, y: 0 })
+  const [lowPower, setLowPower] = useState(false)
 
-  if (lowEnd) {
-    return <HeroFallback />;
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const small = window.matchMedia('(max-width: 640px)').matches
+    setLowPower(reduced || small)
+  }, [])
+
+  if (lowPower) {
+    return (
+      <div className="h-[420px] w-full xl:h-[560px]">
+        <StaticFallback />
+      </div>
+    )
   }
 
   return (
-    <div className="relative h-[300px] md:h-[500px] w-full overflow-hidden xl:h-[700px] flex items-center justify-center" style={{ pointerEvents: 'none' }}>
-      <div className="w-full h-full scale-[1.3] sm:scale-[1.5] md:scale-[1.3] origin-center">
-        <Suspense fallback={<SplineLoadingPlaceholder />}>
-          <LazySpline
-            scene="https://prod.spline.design/6yD6FSIerDpK6Xmx/scene.splinecode"
+    <div
+      className="h-[440px] w-full xl:h-[580px]"
+      onPointerMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        setPointer({
+          x: ((e.clientX - r.left) / r.width - 0.5) * 2,
+          y: ((e.clientY - r.top) / r.height - 0.5) * 2,
+        })
+      }}
+      onPointerLeave={() => setPointer({ x: 0, y: 0 })}
+    >
+      <Canvas
+        dpr={[1, 2]}
+        shadows
+        gl={{
+          antialias: true,
+          alpha: true,
+          toneMapping: ACESFilmicToneMapping,
+          toneMappingExposure: 1.15,
+        }}
+        // pulled back + narrower fov so the knot never crops
+        camera={{ position: [0, 0.3, 7], fov: 30 }}
+      >
+        <ambientLight intensity={0.5} />
+        <directionalLight
+          position={[4, 6, 5]}
+          intensity={1.6}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+        />
+        <directionalLight position={[-6, -2, 2]} intensity={0.6} color="#457b9d" />
+        <Suspense fallback={null}>
+          <Float speed={1.4} rotationIntensity={0.25} floatIntensity={0.5}>
+            {/* Center guarantees the object is framed, never clipped */}
+            <Center>
+              <Knot pointer={pointer} />
+            </Center>
+          </Float>
+
+          {/* soft grounding shadow → premium, grounded feel */}
+          <ContactShadows
+            position={[0, -2.1, 0]}
+            opacity={0.45}
+            scale={11}
+            blur={2.8}
+            far={4}
+            color="#04101f"
           />
+
+          {/* studio lighting rig → streaked speculars across the glass */}
+          <Environment resolution={512}>
+            <group rotation={[0, 0, 0]}>
+              <Lightformer
+                form="rect"
+                intensity={3}
+                position={[3, 3, 4]}
+                scale={[7, 7, 1]}
+                color="#f1faee"
+              />
+              <Lightformer
+                form="rect"
+                intensity={2}
+                position={[-5, 2, -3]}
+                scale={[6, 6, 1]}
+                color="#a8dadc"
+              />
+              <Lightformer
+                form="ring"
+                intensity={1.4}
+                position={[0, -4, 3]}
+                scale={[8, 3, 1]}
+                color="#457b9d"
+              />
+              <Lightformer
+                form="rect"
+                intensity={1.2}
+                position={[0, 4, -5]}
+                scale={[10, 2, 1]}
+                color="#e63946"
+              />
+            </group>
+          </Environment>
         </Suspense>
-      </div>
+      </Canvas>
     </div>
-  );
+  )
 }
