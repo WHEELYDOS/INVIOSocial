@@ -78,7 +78,10 @@ export default function NewsletterSignup() {
           </svg>
 
           <input
+            id="newsletter-email"
+            name="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={handleChange}
             onBlur={() => setTouched(true)}

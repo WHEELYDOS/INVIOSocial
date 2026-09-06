@@ -100,7 +100,7 @@ export default function HeroScene() {
     >
       <Canvas
         dpr={[1, 2]}
-        shadows
+        shadows="percentage"
         gl={{
           antialias: true,
           alpha: true,
