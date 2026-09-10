@@ -11,6 +11,7 @@ A Vite development server is **always running** on `$PORT` (default 8443). You d
 
 ## Key Files
 
+- `INTEGRATION_GUIDE.md` - Master guide for connecting buttons, APIs, webhooks, and services
 - `src/App.tsx` - Main application component
 - `src/main.tsx` - React entry point
 - `src/index.css` - Global styles and Tailwind CSS import

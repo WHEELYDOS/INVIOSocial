@@ -8,8 +8,10 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = 'https://ctflhihpyxtdacjwqojm.supabase.co'
+const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL || 'https://ctflhihpyxtdacjwqojm.supabase.co'
 const SUPABASE_ANON_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0ZmxoaWhweXh0ZGFjandxb2ptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5ODk4NDcsImV4cCI6MjA4OTU2NTg0N30.NBfrDpuKklQuwGuuIm1Z9PU8jX7MmxXxWa5r-z6lvcE'
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -66,6 +68,27 @@ export async function bookConsultation(
     return {
       success: false,
       message: 'Something went wrong. Please try again or email us directly.',
+    }
+  }
+
+  // Fire Webhook to Make / Zapier / n8n if configured
+  const webhookUrl = import.meta.env.VITE_MAKE_WEBHOOK_URL
+  if (webhookUrl) {
+    try {
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          message: cleanMessage,
+          source: 'Website Consultation Modal',
+          timestamp: new Date().toISOString(),
+        }),
+      }).catch((err) => console.error('[webhook error]', err))
+    } catch (e) {
+      console.warn('Webhook trigger skipped:', e)
     }
   }
 

@@ -17,7 +17,8 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
   // Decide synchronously so the homepage never flashes before the overlay.
   const [active, setActive] = useState(() => {
     if (typeof window === 'undefined') return false
-
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return false
     // A hard refresh (or the very first visit) should replay the intro; only
     // in-session React re-mounts should be skipped via the session flag.
     const nav = performance.getEntriesByType(
@@ -56,7 +57,7 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
     }
     const mobile = window.matchMedia('(max-width: 640px)').matches
     const glyphMs = mobile ? 900 : 1500
-    const wordMs = 400
+    const wordMs = mobile ? 300 : 380
 
     const t = timers.current
     t.push(window.setTimeout(() => setShowSkip(true), 1000))
@@ -137,9 +138,9 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
         {phase === 'words' && (
           <span
             key={wordIndex}
-            className="inline-block font-display font-extrabold tracking-tight text-center"
+            className="font-display font-extrabold tracking-tight"
             style={{
-              fontSize: 'clamp(1.5rem, 8vw, 9rem)',
+              fontSize: 'clamp(3rem, 12vw, 9rem)',
               color: WORDS[wordIndex].accent ? '#e63946' : '#f1faee',
               animation: 'word-flash 0.38s cubic-bezier(0.16,1,0.3,1) both',
             }}

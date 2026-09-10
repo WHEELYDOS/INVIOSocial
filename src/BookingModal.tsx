@@ -29,9 +29,11 @@ function SvgIcon({ d, size = 20, className = '' }: { d: string; size?: number; c
 export default function BookingModal({
   open,
   onClose,
+  defaultService,
 }: {
   open: boolean
   onClose: () => void
+  defaultService?: string
 }) {
   const backdropRef = useRef<HTMLDivElement>(null)
   const [closing, setClosing] = useState(false)
@@ -44,6 +46,16 @@ export default function BookingModal({
     message: '',
   })
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ConsultationFormData, string>>>({})
+
+  /* ── Prefill message when defaultService changes ── */
+  useEffect(() => {
+    if (open && defaultService) {
+      setForm((prev) => ({
+        ...prev,
+        message: `I'm interested in ${defaultService}. Here's what we need: `,
+      }))
+    }
+  }, [open, defaultService])
 
   /* ── Close with exit animation ── */
   const handleClose = useCallback(() => {
