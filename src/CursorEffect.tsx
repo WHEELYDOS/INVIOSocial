@@ -103,16 +103,16 @@ export default function CursorEffect() {
   return (
     <div
       style={{ opacity: enabled ? 1 : 0 }}
-      className="transition-opacity duration-200"
+      className="pointer-events-none transition-opacity duration-200"
     >
       <canvas
         ref={trail}
-        className="pointer-events-none fixed inset-0 z-[90]"
+        className="pointer-events-none fixed inset-0 z-[9997]"
         aria-hidden
       />
       <div
         ref={ring}
-        className="pointer-events-none fixed left-0 top-0 z-[91] h-9 w-9 rounded-full border"
+        className="pointer-events-none fixed left-0 top-0 z-[9998] h-9 w-9 rounded-full border"
         style={{
           borderColor: '#457b9d',
           backgroundColor: 'rgba(168,218,220,0.08)',
@@ -124,10 +124,11 @@ export default function CursorEffect() {
       />
       <div
         ref={dot}
-        className="pointer-events-none fixed left-0 top-0 z-[92] h-2 w-2 rounded-full bg-strawberry"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-strawberry"
         style={{ willChange: 'transform' }}
         aria-hidden
       />
     </div>
+
   )
 }
