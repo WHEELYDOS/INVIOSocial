@@ -7,7 +7,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react'
-import wordmark from '@/imports/lanscape.png'
+const wordmark = '/lanscape.png'
 import glyphMark from '@/imports/final00.jpg'
 import IntroSequence from '@/IntroSequence'
 import CursorEffect from '@/CursorEffect'
