@@ -70,6 +70,21 @@ function StaticFallback() {
 
 export default function HeroScene() {
   const [pointer, setPointer] = useState({ x: 0, y: 0 })
+  const [lowPower, setLowPower] = useState(false)
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const small = window.matchMedia('(max-width: 640px)').matches
+    setLowPower(reduced || small)
+  }, [])
+
+  if (lowPower) {
+    return (
+      <div className="h-[420px] w-full xl:h-[560px]">
+        <StaticFallback />
+      </div>
+    )
+  }
 
   return (
     <div
