@@ -1,0 +1,84 @@
+# Invio Social — Full Context for AI Systems
+
+## Company Overview
+
+Invio Social is a website and automation agency. We design sharp, high-performance websites and build self-running automation systems — social scheduling, workflow pipelines, and integrations that keep businesses moving on autopilot. Founded in 2026, we serve small to mid-size businesses looking to eliminate manual operations work.
+
+## Services in Detail
+
+### Web Design
+Sharp, fast marketing sites and product surfaces built to convert — designed pixel-first and engineered to load in a blink. We hand-code every surface without clunky builders, ensuring sites load in under a second. Our average load time is 0.8 seconds.
+
+Includes: Marketing sites, Product UI, Design systems.
+
+### Automation Workflows
+Self-running pipelines that move work between your tools untouched. We build on Zapier, Make, and custom APIs to create data sync systems that eliminate manual handoffs. The busywork closes itself while your team stays on the work that matters.
+
+Includes: Zapier / Make integrations, Custom API development, Data synchronization.
+
+### Social Systems
+Content engines that schedule, publish, and report on autopilot — a loop that keeps your brand in motion without a person babysitting it. We build full social media operations stacks.
+
+Includes: Content scheduling, Auto-reporting, Content operations.
+
+### Integrations
+Every platform wired into one loop — data flows where it should, nothing leaks, and every tool finally speaks the same language. We connect CRMs, billing systems, and custom webhooks into a single source of truth.
+
+Includes: CRM + billing integrations, Webhooks, Single source of truth architecture.
+
+## Process
+
+Our four-step automation cycle:
+
+1. **Map**: We chart every manual handoff across your stack — identifying bottlenecks and automation opportunities.
+2. **Build**: We wire the loops — designed, tested, and documented to specification.
+3. **Launch**: Systems go live with monitoring from day one — nothing ships without observability.
+4. **Refine**: The loop learns; we tune it as you scale — continuous improvement built into the engagement.
+
+## Proven Results
+
+- **93% reduction** in manual work for a 39-person operations team
+- **5.1x faster** lead response time after automating intake processes
+- **17,000 hours** returned to clients across last year
+
+## Client Testimonials
+
+"Invio rebuilt our entire intake as one loop. What took three people now runs while we sleep." — Dana Whitfield, COO, Northwind Labs
+
+"The site is sharp and the automation behind it is sharper. Leads never sit idle anymore." — Marcus Reyes, Founder, Cadence Studio
+
+"We went from 12 manual steps to 2 clicks. The ROI paid for the project in the first month." — Aisha Patel, Head of Ops, Meridian Health
+
+## Competitive Advantages
+
+| Feature | Invio Social | Typical Agencies |
+|---------|-------------|-----------------|
+| Load Time | 0.8s average | 2-4s average |
+| Code Quality | Hand-coded, no builders | WordPress/template-based |
+| Monitoring | 24/7 included | Often extra or absent |
+| Hidden Fees | $0, ever | Common surprise invoices |
+| Scalability | 10x growth without rebuild | Often requires rebuild |
+
+## Frequently Asked Questions
+
+**Q: How long does a typical website project take?**
+A: Most builds ship in three to five weeks. We map the loops in week one, wire and test through the middle, and launch with monitoring on — timelines flex with scope, never with polish.
+
+**Q: What does "automation" actually mean for my business?**
+A: It means the repetitive work your team does by hand — moving data between tools, sending follow-ups, generating reports — gets wired into self-running pipelines. You set the rules once, and the system handles the rest.
+
+**Q: Do I need to know how to code to manage the systems you build?**
+A: No. Everything ships with plain-language controls and a short walkthrough. If you can send an email, you can steer the loop — and we're one message away when you want a change.
+
+**Q: What happens if something breaks after launch?**
+A: We monitor every system from day one, so we usually catch issues before you notice them. When something does slip, alerts reach us first and fixes go out fast.
+
+**Q: How much does a project cost?**
+A: It scales with scope — a focused site starts lean, a full automation stack more. You see the entire number before we write a single line, with no surprises after.
+
+## Contact Information
+
+- **Email**: inviosocial@gmail.com
+- **LinkedIn**: https://www.linkedin.com/company/inviosocial/
+- **X / Twitter**: https://x.com/inviosocial
+- **Website**: https://inviosocial.com

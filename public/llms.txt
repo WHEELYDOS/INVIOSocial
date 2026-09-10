@@ -1,0 +1,68 @@
+# Invio Social
+
+> Website + automation agency that designs sharp websites and wires self-running automation systems.
+
+## What We Do
+
+Invio Social builds websites, automation workflows, social media systems, and platform integrations for businesses that want their operations to run on autopilot. We hand-code every surface for speed, wire automation pipelines between your tools, and monitor everything from day one.
+
+## Services
+
+- **Web Design**: Marketing sites, product UI, and design systems — pixel-first, engineered to load in under a second.
+- **Automation Workflows**: Self-running pipelines via Zapier, Make, or custom APIs that move work between your tools untouched.
+- **Social Systems**: Content engines that schedule, publish, and report on autopilot — keeping your brand in motion without babysitting.
+- **Integrations**: CRM, billing, webhooks — every platform wired into one loop so data flows where it should and nothing leaks.
+
+## Our Process
+
+1. **Map** — We chart every manual handoff across your stack.
+2. **Build** — We wire the loops — designed, tested, documented.
+3. **Launch** — Systems go live with monitoring from day one.
+4. **Refine** — The loop learns; we tune it as you scale.
+
+## Results
+
+- 93% less manual work for a 39-person ops team
+- 5.1x faster lead response after automating intake
+- 17,000 hours returned to clients last year
+
+## Why Choose Invio Social
+
+- **Engineered for Speed**: 0.8s average load time — hand-coded, no clunky builders.
+- **Built to Scale**: Architecture that handles 10x growth without rebuilding.
+- **Zero Babysitting**: 24/7 uptime monitoring included — we catch issues before you notice.
+- **Transparent Pricing**: $0 hidden fees, ever. Full scope and cost before we write a single line.
+
+## FAQ
+
+### How long does a typical website project take?
+Most builds ship in three to five weeks. We map the loops in week one, wire and test through the middle, and launch with monitoring on.
+
+### What does "automation" actually mean for my business?
+It means the repetitive work your team does by hand — moving data between tools, sending follow-ups, generating reports — gets wired into self-running pipelines. You set the rules once, and the system handles the rest.
+
+### Do I need to know how to code to manage the systems you build?
+No. Everything ships with plain-language controls and a short walkthrough. If you can send an email, you can steer the loop.
+
+### What happens if something breaks after launch?
+We monitor every system from day one, so we usually catch issues before you notice them. When something does slip, alerts reach us first and fixes go out fast.
+
+### How much does a project cost?
+It scales with scope — a focused site starts lean, a full automation stack more. You see the entire number before we write a single line, with no surprises after.
+
+## Contact
+
+- Email: inviosocial@gmail.com
+- LinkedIn: https://www.linkedin.com/company/inviosocial/
+- X / Twitter: https://x.com/inviosocial
+- Website: https://inviosocial.com
+
+## Links
+
+- [Home](https://inviosocial.com/)
+- [Services](https://inviosocial.com/#services)
+- [Process](https://inviosocial.com/#process)
+- [Why Us](https://inviosocial.com/#why)
+- [Our Work](https://inviosocial.com/#work)
+- [Testimonials](https://inviosocial.com/#testimonials)
+- [FAQ](https://inviosocial.com/#faq)

@@ -1,10 +1,18 @@
 {
-  "description": "Streamline project management with intuitive task tracking and collaboration tools designed for teams to enhance productivity and communication.",
+  "title": "Invio Social — Website, Automation & Growth Systems",
+  "description": "We design sharp websites and build self-running automation systems — social scheduling, workflow pipelines, and integrations that keep your business moving on autopilot.",
+  "language": "en",
   "robots": {
-    "index": false
+    "index": true
+  },
+  "icons": {
+    "icon": "/favicon.jpg"
+  },
+  "openGraph": {
+    "image": "/og-image.jpg"
   },
   "accessibility": {
-    "addBypassLinks": false,
+    "addBypassLinks": true,
     "ignoreReducedMotion": false
   }
 }

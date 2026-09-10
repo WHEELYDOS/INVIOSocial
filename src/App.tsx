@@ -932,6 +932,151 @@ export default function App() {
     setBookingModalOpen(true)
   }, [])
 
+  /* ------------------------------------------------------------------ */
+  /* SEO: Inject JSON-LD structured data into <head>                     */
+  /* ------------------------------------------------------------------ */
+  useEffect(() => {
+    const schemas = [
+      // Organization schema — company info for knowledge panel
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Invio Social',
+        url: 'https://inviosocial.com',
+        logo: 'https://inviosocial.com/favicon.jpg',
+        email: 'inviosocial@gmail.com',
+        description:
+          'We design sharp websites and build self-running automation systems — social scheduling, workflow pipelines, and integrations that keep your business moving on autopilot.',
+        foundingDate: '2026',
+        sameAs: [
+          'https://www.linkedin.com/company/inviosocial/',
+          'https://x.com/inviosocial',
+        ],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: 'inviosocial@gmail.com',
+          contactType: 'sales',
+          availableLanguage: 'English',
+        },
+        // AI SEO: aggregateRating helps AI engines assess trust
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '5.0',
+          reviewCount: '3',
+          bestRating: '5',
+        },
+        // AI SEO: explicit review snippets for AI extraction
+        review: QUOTES.map((qt) => ({
+          '@type': 'Review',
+          author: {
+            '@type': 'Person',
+            name: qt.n,
+            jobTitle: qt.r,
+          },
+          reviewBody: qt.q,
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: '5',
+            bestRating: '5',
+          },
+        })),
+      },
+      // WebSite schema — site-level info
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Invio Social',
+        url: 'https://inviosocial.com',
+      },
+      // AI SEO: WebPage with speakable — tells AI which sections
+      // contain the most important extractable content
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Invio Social — Website, Automation & Growth Systems',
+        url: 'https://inviosocial.com',
+        description:
+          'We design sharp websites and build self-running automation systems — social scheduling, workflow pipelines, and integrations that keep your business moving on autopilot.',
+        speakable: {
+          '@type': 'SpeakableSpecification',
+          cssSelector: [
+            'h1',
+            '[aria-label="Hero — Automation that runs itself"] p',
+            '#services h2',
+            '#services h3',
+            '#faq h3',
+          ],
+        },
+        lastReviewed: new Date().toISOString().split('T')[0],
+      },
+      // FAQPage schema — rich results for FAQ section
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: FAQS.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.a,
+          },
+        })),
+      },
+      // AI SEO: ProfessionalService schema — richer than generic Service,
+      // helps AI engines identify us as a service provider with track record
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        name: 'Invio Social',
+        url: 'https://inviosocial.com',
+        description:
+          'Website and automation agency that designs sharp websites and builds self-running automation systems for businesses.',
+        email: 'inviosocial@gmail.com',
+        priceRange: '$$',
+        areaServed: {
+          '@type': 'Place',
+          name: 'Worldwide',
+        },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Invio Social Services',
+          itemListElement: SERVICES.map((s, i) => ({
+            '@type': 'OfferCatalog',
+            name: s.title,
+            description: s.desc,
+            position: i + 1,
+          })),
+        },
+      },
+      // Service schema — mark up each individual service
+      ...SERVICES.map((s) => ({
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: s.title,
+        description: s.desc,
+        provider: {
+          '@type': 'Organization',
+          name: 'Invio Social',
+          url: 'https://inviosocial.com',
+        },
+        serviceType: s.title,
+        areaServed: 'Worldwide',
+      })),
+    ]
+
+    const scripts = schemas.map((schema) => {
+      const script = document.createElement('script')
+      script.type = 'application/ld+json'
+      script.textContent = JSON.stringify(schema)
+      document.head.appendChild(script)
+      return script
+    })
+
+    return () => {
+      scripts.forEach((s) => s.remove())
+    }
+  }, [])
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const lenis = new Lenis({
@@ -971,9 +1116,10 @@ export default function App() {
     <div className="relative min-h-screen bg-space font-sans text-honeydew">
       {/* The whole page rides above a full-viewport footer, sliding up to
           reveal it — a classic parallax-reveal footer. */}
-      <div
+      <main
         className="relative z-10 bg-ink shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]"
         style={{ marginBottom: '100vh' }}
+        role="main"
       >
       {/* ambient depth glows, fixed inside the scrolling stage */}
       <div
@@ -1031,7 +1177,7 @@ export default function App() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden" aria-label="Hero — Automation that runs itself">
         {/* moving background graphics — drifting brush strokes + faint ambient */}
         <HeroBackdrop />
         <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-center gap-8 px-6 lg:px-16 pb-20 pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-28 lg:pt-24">
@@ -1148,7 +1294,7 @@ export default function App() {
       <LoopDivider />
 
       {/* SERVICES */}
-      <section id="services" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-20">
+      <section id="services" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-20" aria-label="Our services">
         <Reveal variant="blur">
           <div className="mb-12 flex items-end justify-between gap-6">
             <h2 className="font-display text-3xl font-bold tracking-tight text-honeydew sm:text-4xl">
@@ -1226,7 +1372,7 @@ export default function App() {
       </div>
 
       {/* PROCESS — light band, the automation cycle */}
-      <section id="process" className="relative overflow-hidden bg-honeydew">
+      <section id="process" className="relative overflow-hidden bg-honeydew" aria-label="Our process">
         {/* faint watermark loop */}
         <ParallaxLayer
           strength={0.2}
@@ -1273,7 +1419,7 @@ export default function App() {
       </section>
 
       {/* WHY CHOOSE US — alternating advantage rows */}
-      <section id="why" className="relative overflow-hidden">
+      <section id="why" className="relative overflow-hidden" aria-label="Why choose us">
         <div className="mx-auto max-w-[1600px] px-6 lg:px-16 py-24">
           <Reveal variant="blur">
             <div className="mb-14">
@@ -1339,7 +1485,7 @@ export default function App() {
       </section>
 
       {/* WORK / RESULTS — light band */}
-      <section id="work" className="relative overflow-hidden bg-honeydew">
+      <section id="work" className="relative overflow-hidden bg-honeydew" aria-label="Our work and results">
         <ParallaxLayer
           strength={0.2}
           className="pointer-events-none absolute -left-24 top-10 opacity-[0.05]"
@@ -1386,7 +1532,7 @@ export default function App() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="testimonials" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-24">
+      <section id="testimonials" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-24" aria-label="Client testimonials">
         <Reveal variant="blur">
           <div className="mb-12">
             <span className="text-sm text-frosted/80">05 / Testimonials</span>
@@ -1430,7 +1576,7 @@ export default function App() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-24">
+      <section id="faq" className="mx-auto max-w-[1600px] px-6 lg:px-16 py-24" aria-label="Frequently asked questions">
         <Reveal variant="blur">
           <div className="mb-10 text-center">
             <span className="text-sm text-frosted/80">06 / FAQ</span>
@@ -1487,7 +1633,7 @@ export default function App() {
         </div>
       </section>
 
-      </div>
+      </main>
 
       {/* PARALLAX FOOTER — a full-viewport stage revealed beneath the page */}
       <footer className="fixed bottom-0 left-0 z-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-space">
@@ -1522,13 +1668,15 @@ export default function App() {
             </h2>
           </Reveal>
           <Reveal delay={160}>
-            <a
-              href="mailto:inviosocial@gmail.com"
-              className="mt-8 inline-flex items-center gap-3 text-lg font-medium text-honeydew/90 transition-colors hover:text-strawberry"
-            >
-              inviosocial@gmail.com
-              <span aria-hidden>→</span>
-            </a>
+            <address className="not-italic">
+              <a
+                href="mailto:inviosocial@gmail.com"
+                className="mt-8 inline-flex items-center gap-3 text-lg font-medium text-honeydew/90 transition-colors hover:text-strawberry"
+              >
+                inviosocial@gmail.com
+                <span aria-hidden>→</span>
+              </a>
+            </address>
           </Reveal>
         </div>
 
