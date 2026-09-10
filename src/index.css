@@ -60,6 +60,7 @@
 
 html {
   scrollbar-width: none;
+  overflow-x: hidden;
 }
 html::-webkit-scrollbar {
   display: none;
@@ -71,6 +72,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -328,6 +330,7 @@ body {
 }
 .reveal.in-view {
   animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: auto;
 }
 .reveal.rv-left.in-view {
   animation-name: reveal-left;
@@ -340,6 +343,21 @@ body {
 }
 .reveal.rv-blur.in-view {
   animation-name: reveal-blur;
+}
+
+/* Mobile & touch optimization: eliminate GPU blur pipeline stall during scroll */
+@media (max-width: 768px), (pointer: coarse) {
+  .reveal.rv-blur.in-view {
+    animation-name: reveal-up;
+  }
+  .hero-aurora-a,
+  .hero-aurora-b,
+  .hero-grid-pan {
+    animation: none !important;
+  }
+  .bg-graphic {
+    animation: none !important;
+  }
 }
 
 /* Lenis smooth-scroll baseline */

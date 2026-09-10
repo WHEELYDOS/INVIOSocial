@@ -143,6 +143,8 @@ function useParallax(strength = 0.15) {
     const el = ref.current
     if (!el) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (window.matchMedia('(max-width: 768px)').matches) return
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return
     let raf = 0
     const update = () => {
       const rect = el.getBoundingClientRect()
@@ -439,7 +441,7 @@ function LogoMarquee() {
   )
 }
 
-/* Interactive card — cursor spotlight + gentle 3D tilt on hover. */
+/* Interactive card — cursor spotlight + gentle 3D tilt on hover (fine pointer only). */
 function SpotlightCard({
   children,
   className = '',
@@ -448,8 +450,14 @@ function SpotlightCard({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const isFineRef = useRef(false)
+
+  useEffect(() => {
+    isFineRef.current = window.matchMedia('(pointer: fine)').matches
+  }, [])
 
   const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isFineRef.current) return
     const el = ref.current
     if (!el) return
     const r = el.getBoundingClientRect()
@@ -472,7 +480,7 @@ function SpotlightCard({
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       className={`spotlight group relative h-full overflow-hidden border border-white/10 bg-panel transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-steel/60 hover:shadow-[0_20px_50px_-12px_rgba(4,16,31,0.7)] ${className}`}
-      style={{ borderRadius: 6, transformStyle: 'preserve-3d', willChange: 'transform' }}
+      style={{ borderRadius: 6 }}
     >
       {/* cursor-follow glow */}
       <span
@@ -698,7 +706,7 @@ function HeroBackdrop() {
     <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
       {/* faint ambient wash */}
       <div
-        className="absolute -left-[10%] top-[-20%] h-[70vh] w-[70vh] rounded-full blur-[110px]"
+        className="hero-aurora-a absolute -left-[10%] top-[-20%] h-[40vh] w-[40vh] rounded-full blur-[40px] md:h-[70vh] md:w-[70vh] md:blur-[110px]"
         style={{
           background:
             'radial-gradient(circle, rgba(69,123,157,0.18), transparent 65%)',
@@ -706,7 +714,7 @@ function HeroBackdrop() {
         }}
       />
       <div
-        className="absolute bottom-[-20%] left-[30%] h-[55vh] w-[55vh] rounded-full blur-[120px]"
+        className="hero-aurora-b absolute bottom-[-20%] left-[30%] h-[35vh] w-[35vh] rounded-full blur-[40px] md:h-[55vh] md:w-[55vh] md:blur-[120px]"
         style={{
           background:
             'radial-gradient(circle, rgba(230,57,70,0.10), transparent 65%)',
@@ -736,7 +744,7 @@ function HeroBackdrop() {
 
       {/* softly panning grid, masked to the centre */}
       <div
-        className="absolute inset-0 opacity-[0.10]"
+        className="hero-grid-pan absolute inset-0 opacity-[0.10]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(168,218,220,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168,218,220,0.5) 1px, transparent 1px)',
@@ -1079,6 +1087,14 @@ export default function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Skip Lenis on touch / mobile devices — native momentum scrolling is 120Hz smooth
+    // and avoids JS wheel interpolation / layer memory conflicts
+    const isTouchOrMobile =
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia('(max-width: 768px)').matches
+    if (isTouchOrMobile) return
+
     const lenis = new Lenis({
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -1114,11 +1130,10 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-space font-sans text-honeydew">
-      {/* The whole page rides above a full-viewport footer, sliding up to
-          reveal it — a classic parallax-reveal footer. */}
+      {/* On desktop (md:), page rides above a full-viewport footer with 100vh margin.
+          On mobile, standard natural document flow (mb-0) prevents GPU layer eviction. */}
       <main
-        className="relative z-10 bg-ink shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]"
-        style={{ marginBottom: '100vh' }}
+        className="relative z-10 bg-ink shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)] mb-0 md:mb-[100vh]"
         role="main"
       >
       {/* ambient depth glows, fixed inside the scrolling stage */}
@@ -1635,8 +1650,8 @@ export default function App() {
 
       </main>
 
-      {/* PARALLAX FOOTER — a full-viewport stage revealed beneath the page */}
-      <footer className="fixed bottom-0 left-0 z-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-space">
+      {/* FOOTER — on mobile, a natural in-flow section; on desktop (md:), a full-viewport stage revealed beneath */}
+      <footer className="relative z-0 flex min-h-fit w-full flex-col justify-between overflow-hidden bg-space py-16 md:fixed md:bottom-0 md:left-0 md:h-screen md:py-0">
         {/* faint oversized loop mark drifting behind the footer content */}
         <div
           className="pointer-events-none absolute inset-0"
