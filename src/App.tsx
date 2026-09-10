@@ -143,8 +143,8 @@ function useParallax(strength = 0.15) {
     const el = ref.current
     if (!el) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Only bypass on small mobile screens (< 768px); full parallax on all laptops & desktops
     if (window.matchMedia('(max-width: 768px)').matches) return
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return
     let raf = 0
     const update = () => {
       const rect = el.getBoundingClientRect()
@@ -441,7 +441,7 @@ function LogoMarquee() {
   )
 }
 
-/* Interactive card — cursor spotlight + gentle 3D tilt on hover (fine pointer only). */
+/* Interactive card — cursor spotlight + gentle 3D tilt on hover. */
 function SpotlightCard({
   children,
   className = '',
@@ -450,14 +450,8 @@ function SpotlightCard({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const isFineRef = useRef(false)
-
-  useEffect(() => {
-    isFineRef.current = window.matchMedia('(pointer: fine)').matches
-  }, [])
 
   const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!isFineRef.current) return
     const el = ref.current
     if (!el) return
     const r = el.getBoundingClientRect()
@@ -1087,13 +1081,8 @@ export default function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    // Skip Lenis on touch / mobile devices — native momentum scrolling is 120Hz smooth
-    // and avoids JS wheel interpolation / layer memory conflicts
-    const isTouchOrMobile =
-      'ontouchstart' in window ||
-      navigator.maxTouchPoints > 0 ||
-      window.matchMedia('(max-width: 768px)').matches
-    if (isTouchOrMobile) return
+    // Only bypass on small mobile screens (< 768px); full smooth scrolling for all laptops and desktops
+    if (window.matchMedia('(max-width: 768px)').matches) return
 
     const lenis = new Lenis({
       duration: 1.15,
